@@ -237,11 +237,13 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             
             const nameVal = document.getElementById('inquiry-name').value.trim();
-            const contactVal = document.getElementById('inquiry-contact').value.trim();
+            const phoneVal = document.getElementById('inquiry-phone').value.trim();
+            const emailVal = document.getElementById('inquiry-email').value.trim();
+            const typeVal = document.getElementById('inquiry-type').value;
             const messageVal = document.getElementById('inquiry-message').value.trim();
             
-            if (!nameVal || !contactVal || !messageVal) {
-                showToast("모든 항목을 입력해 주세요.");
+            if (!nameVal || !phoneVal || !typeVal || !messageVal) {
+                showToast("필수 항목을 모두 입력해 주세요.");
                 return;
             }
 
@@ -260,14 +262,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const { error } = await supabase
-                    .from('inquiries')
+                    .from('consulting_inquiries')
                     .insert([
-                        { name: nameVal, contact: contactVal, message: messageVal }
+                        { 
+                            name: nameVal, 
+                            phone: phoneVal, 
+                            email: emailVal || null, 
+                            inquiry_type: typeVal, 
+                            message: messageVal 
+                        }
                     ]);
 
                 if (error) throw error;
 
-                showToast("문의가 성공적으로 전달되었습니다.");
+                showToast("상담 신청이 성공적으로 전달되었습니다.");
                 inquiryForm.reset();
             } catch (err) {
                 console.error("Supabase insert error:", err);

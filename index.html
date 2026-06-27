@@ -382,8 +382,8 @@
 
             <!-- ── INQUIRY FORM ── -->
             <div class="inquiry-box">
-                <h3 class="inquiry-box-title"><i data-lucide="message-square" style="color: var(--gold); vertical-align: middle; margin-right: 6px;"></i> 간편 문의 및 메시지 남기기</h3>
-                <p class="inquiry-box-desc">연락처와 문의하실 내용을 남겨주시면 신속하게 답변해 드리겠습니다.</p>
+                <h3 class="inquiry-box-title"><i data-lucide="message-square" style="color: var(--gold); vertical-align: middle; margin-right: 6px;"></i> 간편 문의 및 상담/견적 신청</h3>
+                <p class="inquiry-box-desc">상담 유형을 선택하고 연락처를 남겨주시면 신속하게 답변해 드리겠습니다.</p>
                 <form id="inquiry-form">
                     <div class="inquiry-form-row">
                         <div class="form-group" style="text-align: left;">
@@ -391,17 +391,35 @@
                             <input type="text" id="inquiry-name" required placeholder="예: 홍길동 (길동상사)">
                         </div>
                         <div class="form-group" style="text-align: left;">
-                            <label for="inquiry-contact">연락처 (전화번호/이메일)</label>
-                            <input type="text" id="inquiry-contact" required placeholder="예: 010-0000-0000">
+                            <label for="inquiry-phone">연락처 (전화번호)</label>
+                            <input type="tel" id="inquiry-phone" required placeholder="예: 010-0000-0000">
+                        </div>
+                    </div>
+                    <div class="inquiry-form-row">
+                        <div class="form-group" style="text-align: left;">
+                            <label for="inquiry-email">이메일 주소 (선택)</label>
+                            <input type="email" id="inquiry-email" placeholder="example@email.com">
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label for="inquiry-type">상담 신청 분야</label>
+                            <select id="inquiry-type" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: #fff; outline: none; font-size: 13.5px; font-family: var(--sans); height: 45px; transition: var(--transition-quick);">
+                                <option value="" disabled selected style="background: var(--navy);">상담 분야를 선택해 주세요</option>
+                                <option value="경영진단" style="background: var(--navy);">경영진단</option>
+                                <option value="마케팅전략" style="background: var(--navy);">마케팅전략</option>
+                                <option value="HACCP 인증" style="background: var(--navy);">HACCP 인증</option>
+                                <option value="ESG경영" style="background: var(--navy);">ESG경영</option>
+                                <option value="생성형 AI교육" style="background: var(--navy);">생성형 AI교육</option>
+                                <option value="기타" style="background: var(--navy);">기타</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group" style="text-align: left; margin-bottom: 16px;">
                         <label for="inquiry-message">문의 내용</label>
-                        <textarea id="inquiry-message" rows="3" required placeholder="문의하실 내용을 자유롭게 남겨주세요."></textarea>
+                        <textarea id="inquiry-message" rows="3" required placeholder="문의하실 상세 내용을 남겨주세요."></textarea>
                     </div>
                     <button type="submit" class="btn btn-g" style="width: 100%; min-height: 48px; border-radius: 8px; font-weight: 700; font-size: 14px;">
                         <i data-lucide="send"></i>
-                        <span>문의 보내기</span>
+                        <span>상담 신청하기</span>
                     </button>
                 </form>
             </div>
