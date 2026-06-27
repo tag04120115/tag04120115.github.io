@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김영탁 · 디지털 프로필 명함</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="소상공인의 경영개선을 돕는 경영지도사 김영탁 파트너의 디지털 프로필 페이지입니다. 경영진단, 마케팅전략, HACCP 인증, ESG경영, 생성형 AI 교육 전문 컨설팅을 제공합니다.">
+    <meta name="keywords" content="김영탁, 경영지도사, 경영진단, 마케팅전략, HACCP 인증, ESG경영, 생성형 AI교육, 소상공인 컨설팅">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tag04120115.github.io/">
+
+    <!-- Open Graph (OG) Meta Tags for Social Sharing -->
+    <meta property="og:title" content="김영탁 · 디지털 프로필">
+    <meta property="og:description" content="소상공인의 경영개선을 돕는 경영지도사 | 경영진단 · 마케팅전략 · HACCP 인증 · ESG경영 · 생성형 AI교육">
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="https://tag04120115.github.io/">
+    <meta property="og:image" content="https://tag04120115.github.io/프로필사진.jpg">
+    <meta property="og:image:width" content="800">
+    <meta property="og:image:height" content="800">
+    <meta property="og:image:type" content="image/jpeg">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="김영탁 · 디지털 프로필">
+    <meta name="twitter:description" content="소상공인의 경영개선을 돕는 경영지도사 | 경영진단 · 마케팅전략 · HACCP 인증 · ESG경영 · 생성형 AI교육">
+    <meta name="twitter:image" content="https://tag04120115.github.io/프로필사진.jpg">
+
+    <!-- Browser Theme Color -->
+    <meta name="theme-color" content="#1a3a5c">
+
+    <!-- 
+        [SEO Verification Placeholders]
+        네이버 서치어드바이저 및 구글 서치 콘솔 등록 시 아래 주석을 풀고 인증 태그를 삽입하세요.
+    -->
+    <!-- 네이버 서치어드바이저 소유확인 meta 태그 (Naver Search Advisor Verification) -->
+    <!-- <meta name="naver-site-verification" content="여기에_코드를_넣으세요" /> -->
+    
+    <!-- 구글 서치 콘솔 소유확인 meta 태그 (Google Search Console Verification) -->
+    <!-- <meta name="google-site-verification" content="여기에_코드를_넣으세요" /> -->
+
+    <!-- Global Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Pre-fetching and CDN Prefecthing -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+
+    <!-- ── NAVIGATION BAR ── -->
+    <nav>
+        <a href="#hero" class="nav-logo">YOUNGTAK KIM</a>
+        <button class="nav-ham" id="menu-btn" aria-label="메뉴 토글">
+            <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#hero" class="active">홈</a></li>
+            <li><a href="#expertise">전문 분야</a></li>
+            <li><a href="#contact">연락처</a></li>
+        </ul>
+    </nav>
+
+    <!-- ── HERO SECTION ── -->
+    <section id="hero">
+        <div class="hero-inner">
+            <!-- Profile Photo Container -->
+            <div class="hero-photo-container">
+                <img src="프로필사진.jpg" alt="경영지도사 김영탁 파트너 프로필 사진" class="hero-photo-img">
+            </div>
+
+            <!-- Profile Info Content -->
+            <div class="hero-content">
+                <span class="badge">경영지도사</span>
+                <h1 class="hero-name">김 영 탁</h1>
+                <div class="hero-sub">파트너 (Partner) · 활동 지역: 전북 / 전국</div>
+                <div class="hero-roles">경영진단 · 마케팅전략 · HACCP 인증 · ESG경영 · 생성형 AI교육</div>
+                
+                <!-- Tagline block -->
+                <blockquote class="hero-quote">
+                    "소상공인의 경영개선을 돕는 경영지도사 입니다"
+                </blockquote>
+
+                <!-- CTA Action Button Rows -->
+                <div class="btn-row">
+                    <a href="tel:010-2685-5790" class="btn btn-g" title="김영탁 파트너에게 전화하기">
+                        <i data-lucide="phone"></i>
+                        <span>전화하기</span>
+                    </a>
+                    <a href="mailto:tag0909@naver.com" class="btn btn-o" title="김영탁 파트너에게 이메일 보내기">
+                        <i data-lucide="mail"></i>
+                        <span>이메일 보내기</span>
+                    </a>
+                    <a href="contact.vcf" download class="btn btn-o" title="연락처 휴대폰에 저장">
+                        <i data-lucide="download"></i>
+                        <span>연락처 저장</span>
+                    </a>
+                    <button id="share-btn" class="btn btn-o" title="명함 링크 공유하기">
+                        <i data-lucide="share-2"></i>
+                        <span>명함 공유</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── EXPERTISE SECTION (Accordion UI) ── -->
+    <section id="expertise">
+        <div class="exp-wrap">
+            <span class="sec-label">EXPERTISE & CAPABILITIES</span>
+            <h2 class="sec-title">전문 분야 및 핵심 역량</h2>
+            <p class="sec-guide">각 항목을 탭하시면 상세한 역량과 성과를 확인하실 수 있습니다.</p>
+
+            <div class="domain-tabs">
+                
+                <!-- TAB 1: 개요 (Overview) - Highlighted Cosmic Card -->
+                <div class="domain-tab tab-overview">
+                    <div class="tab-header">
+                        <div class="tab-icon ic0">
+                            <i data-lucide="briefcase"></i>
+                        </div>
+                        <div class="tab-meta">
+                            <span class="tab-num">Overview</span>
+                            <h3 class="tab-name">파트너 소개 및 요약</h3>
+                            <p class="tab-short">소상공인 맞춤 경영자문 및 디지털 전환 선도</p>
+                        </div>
+                        <span class="tab-arrow"><i data-lucide="chevron-right"></i></span>
+                    </div>
+                    <div class="tab-body">
+                        <div class="tab-body-inner">
+                            <p class="field-desc">
+                                변화하는 경영 환경 속에서 소상공인과 중소기업이 경쟁력을 유지하고 지속 가능하게 성장할 수 있도록 현장 중심의 경영지도와 맞춤형 자문을 제공합니다.
+                            </p>
+                            <span class="sub-label"><i data-lucide="tag" style="width: 14px;"></i> 주요 키워드</span>
+                            <div class="tag-row">
+                                <span class="tag">#경영진단</span>
+                                <span class="tag">#마케팅전략</span>
+                                <span class="tag">#HACCP 인증</span>
+                                <span class="tag">#ESG경영</span>
+                                <span class="tag">#생성형 AI교육</span>
+                            </div>
+                            <span class="sub-label"><i data-lucide="map-pin" style="width: 14px;"></i> 활동 범위</span>
+                            <div class="overview-list" style="margin-top: 8px;">
+                                <div class="overview-item">
+                                    <div class="overview-item-title">전라북도 및 전국 전역 자문</div>
+                                    <div class="overview-item-desc">전북 지역을 기반으로 활동하며, 전국 모든 지역의 비즈니스 현장 밀착 경영 개선 컨설팅을 지원합니다.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: 핵심 역량 (Competencies) -->
+                <div class="domain-tab">
+                    <div class="tab-header">
+                        <div class="tab-icon ic1">
+                            <i data-lucide="award"></i>
+                        </div>
+                        <div class="tab-meta">
+                            <span class="tab-num">Competency</span>
+                            <h3 class="tab-name">핵심 역량</h3>
+                            <p class="tab-short">상권/재무분석부터 생성형 AI 실무 접목까지</p>
+                        </div>
+                        <span class="tab-arrow"><i data-lucide="chevron-right"></i></span>
+                    </div>
+                    <div class="tab-body">
+                        <div class="tab-body-inner">
+                            <p class="field-desc">
+                                사업타당성 확보와 디지털 혁신을 아우르는 전문 역량 구조를 바탕으로 성과 중심의 경영 지도를 실현합니다.
+                            </p>
+                            <ul class="competency-list">
+                                <li>
+                                    <div class="comp-title">상권 분석 & 재무 분석</div>
+                                    <div class="comp-desc">상권 입지 요인 진단 및 철저한 비용·손익분기점 타당성 예측 분석</div>
+                                </li>
+                                <li>
+                                    <div class="comp-title">오프라인 / SNS 마케팅 홍보</div>
+                                    <div class="comp-desc">타깃 고객에 맞춘 온라인 채널 최적화 마케팅 및 매장 브랜딩 홍보 기획</div>
+                                </li>
+                                <li>
+                                    <div class="comp-title">HACCP 교육 & 인증 지도</div>
+                                    <div class="comp-desc">안전한 식품 위생 및 관리를 위한 HACCP 인증 프로세스 설계 및 이론 강의</div>
+                                </li>
+                                <li>
+                                    <div class="comp-title">생성형 AI 활용 실무 프로세스</div>
+                                    <div class="comp-desc">ChatGPT 등 생성형 AI를 활용한 실무 자동화 프로세스 설계 및 마케팅 기획 도구 제공</div>
+                                </li>
+                                <li>
+                                    <div class="comp-title">ESG 지속가능보고서 작성 지원</div>
+                                    <div class="comp-desc">기업의 신뢰성 강화를 위한 환경·사회·지배구조(ESG) 평가지표 수립 및 보고서 작성 컨설팅</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: 활동 분야 (Areas of Activity) -->
+                <div class="domain-tab">
+                    <div class="tab-header">
+                        <div class="tab-icon ic2">
+                            <i data-lucide="globe-2"></i>
+                        </div>
+                        <div class="tab-meta">
+                            <span class="tab-num">Activity</span>
+                            <h3 class="tab-name">현재 하는 일 / 활동 분야</h3>
+                            <p class="tab-short">경영 재건, 기업인증, 디지털 전환 교육 현황</p>
+                        </div>
+                        <span class="tab-arrow"><i data-lucide="chevron-right"></i></span>
+                    </div>
+                    <div class="tab-body">
+                        <div class="tab-body-inner">
+                            <p class="field-desc">
+                                소상공인의 생존율 제고와 지속 가능한 성장 기반을 위해 다음과 같은 영역에서 컨설턴트 및 교육 전문가로 활동하고 있습니다.
+                            </p>
+                            <div class="overview-list">
+                                <div class="overview-item">
+                                    <div class="overview-item-title">경영 및 재무진단 · 마케팅 전략 수립</div>
+                                    <div class="overview-item-desc">비즈니스 프로세스의 누수를 파악하고, 재무 상태 진단에 따른 단계별 마케팅 전략 및 타개책을 처방합니다.</div>
+                                </div>
+                                <div class="overview-item">
+                                    <div class="overview-item-title">소상공인 위기관리 및 사업 정리 컨설팅</div>
+                                    <div class="overview-item-desc">한계 기업이나 폐업 위기에 놓인 소상공인의 재기를 위해 재산 보호 및 안전하고 신속한 사업 정리 절차를 돕습니다.</div>
+                                </div>
+                                <div class="overview-item">
+                                    <div class="overview-item-title">식품안전관리인증(HACCP) 및 ISO 기업 인증 지도</div>
+                                    <div class="overview-item-desc">식품 제조업소 및 조리 시설의 HACCP 지정을 위한 현장 레이아웃 자문, 문서 지도, ISO 시스템 연계 관리 지도를 수행합니다.</div>
+                                </div>
+                                <div class="overview-item">
+                                    <div class="overview-item-title">생성형 AI 활용 업무 생산성 실무 교육</div>
+                                    <div class="overview-item-desc">소상공인 및 직장인들이 생성형 AI 도구를 비즈니스 홍보물 기획, 문서 생성, 자동 손익 계산에 활용할 수 있도록 맞춤형 실전 강의를 진행합니다.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: 대표 경력 및 성과 (Credentials & Performance) -->
+                <div class="domain-tab">
+                    <div class="tab-header">
+                        <div class="tab-icon ic3">
+                            <i data-lucide="star"></i>
+                        </div>
+                        <div class="tab-meta">
+                            <span class="tab-num">Credentials</span>
+                            <h3 class="tab-name">대표 경력 / 성과 / 자격</h3>
+                            <p class="tab-short">연 평균 80회 이상의 소상공인 밀착 컨설팅 트랙 레코드</p>
+                        </div>
+                        <span class="tab-arrow"><i data-lucide="chevron-right"></i></span>
+                    </div>
+                    <div class="tab-body">
+                        <div class="tab-body-inner">
+                            <p class="field-desc">
+                                공인된 자격을 갖추고 검증된 다년간의 현장 지도 경력을 통해 확실한 비즈니스 처방을 제시합니다.
+                            </p>
+                            
+                            <span class="sub-label"><i data-lucide="check-square" style="width: 14px;"></i> 보유 자격</span>
+                            <div class="tl-wrap">
+                                <div class="tl-item">
+                                    <div class="tl-dot"></div>
+                                    <div class="tl-title">경영지도사 자격 취득</div>
+                                    <div class="tl-desc">중소벤처기업부 국가전문자격인 경영지도사(재무/마케팅 등) 전문 자격 보유</div>
+                                </div>
+                                <div class="tl-item">
+                                    <div class="tl-dot"></div>
+                                    <div class="tl-title">환경안전관리 및 에너지사용진단사</div>
+                                    <div class="tl-desc">산업 현장 환경안전 관리 시스템 진단 및 에너지 효율 개선 자문 위원</div>
+                                </div>
+                            </div>
+
+                            <span class="sub-label"><i data-lucide="trending-up" style="width: 14px;"></i> 컨설팅 & 교육 성과</span>
+                            <div class="tl-wrap">
+                                <div class="tl-item">
+                                    <div class="tl-dot"></div>
+                                    <div class="tl-date">ANNUAL AVERAGE</div>
+                                    <div class="tl-title">소상공인 경영개선 컨설팅 연 평균 60회 수행</div>
+                                    <div class="tl-desc">마케팅, 손익구조 개선, 정책자금 연계 등 밀착 지도를 통한 점포 활성화 유도</div>
+                                </div>
+                                <div class="tl-item">
+                                    <div class="tl-dot"></div>
+                                    <div class="tl-date">ANNUAL AVERAGE</div>
+                                    <div class="tl-title">소상공인 사업정리(폐업/재기) 컨설팅 연 평균 20회 지원</div>
+                                    <div class="tl-desc">정부지원금 연계 및 안전 자산 회수, 원상복구 가이드 지원으로 신속한 재기 기반 조성</div>
+                                </div>
+                                <div class="tl-item">
+                                    <div class="tl-dot"></div>
+                                    <div class="tl-date">EDUCATION TIME</div>
+                                    <div class="tl-title">HACCP 이론 및 실무 양성 교육 연 40시간 진행</div>
+                                    <div class="tl-desc">식품 위생 교육생을 대상으로 철저한 HACCP 선행요건 및 위해요소분석 이론 강의</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: 제공 서비스 (Services & Tools) -->
+                <div class="domain-tab">
+                    <div class="tab-header">
+                        <div class="tab-icon ic4">
+                            <i data-lucide="layers"></i>
+                        </div>
+                        <div class="tab-meta">
+                            <span class="tab-num">Services</span>
+                            <h3 class="tab-name">제공 서비스 및 업무 도구</h3>
+                            <p class="tab-short">AI 기술을 접목한 스마트 경영 지원 솔루션</p>
+                        </div>
+                        <span class="tab-arrow"><i data-lucide="chevron-right"></i></span>
+                    </div>
+                    <div class="tab-body">
+                        <div class="tab-body-inner">
+                            <p class="field-desc">
+                                컨설팅 이후에도 소상공인 스스로 진단하고 적용해 볼 수 있도록 실무형 디지털 전환 도구를 지원합니다.
+                            </p>
+                            <div class="overview-list">
+                                <div class="overview-item">
+                                    <div class="overview-item-title">AI 활용 자동 재무 분석 및 손익분기점 레포트</div>
+                                    <div class="overview-item-desc">매출과 비용 데이터를 활용하여 AI 기반의 즉각적인 마진 분석 및 손익분기 도달을 위한 맞춤형 자동 시뮬레이션 데이터를 제공합니다.</div>
+                                </div>
+                                <div class="overview-item">
+                                    <div class="overview-item-title">생성형 AI 활용 실무 프로세스 툴킷</div>
+                                    <div class="overview-item-desc">블로그 글 작성, SNS 광고 카피라이팅, 정부 지원사업 계획서 작성을 10배 이상 효율화할 수 있는 전용 프롬프트 템플릿과 응용 가이드를 전달해 드립니다.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ── CONTACT / CTA SECTION ── -->
+    <section id="contact">
+        <div class="contact-wrap">
+            <h2 class="contact-title">김영탁 파트너와 함께<br>비즈니스의 안정적인 내일을 기획해 보세요.</h2>
+            
+            <div class="c-grid">
+                <!-- Phone Card -->
+                <a href="tel:010-2685-5790" class="c-item" title="김영탁 파트너 대표전화 연결">
+                    <div class="c-icon">
+                        <i data-lucide="phone"></i>
+                    </div>
+                    <div class="c-meta">
+                        <span class="c-type">PHONE</span>
+                        <span class="c-val">010-2685-5790</span>
+                    </div>
+                </a>
+
+                <!-- Email Card -->
+                <a href="mailto:tag0909@naver.com" class="c-item" title="이메일 문의 보내기">
+                    <div class="c-icon">
+                        <i data-lucide="mail"></i>
+                    </div>
+                    <div class="c-meta">
+                        <span class="c-type">EMAIL</span>
+                        <span class="c-val">tag0909@naver.com</span>
+                    </div>
+                </a>
+
+                <!-- Blog Card (Opens in new tab) -->
+                <a href="https://blog.naver.com/tag0909" target="_blank" rel="noopener noreferrer" class="c-item" title="공식 네이버 블로그 이동 (새 창)">
+                    <div class="c-icon">
+                        <i data-lucide="book-open"></i>
+                    </div>
+                    <div class="c-meta">
+                        <span class="c-type">BLOG</span>
+                        <span class="c-val">blog.naver.com/tag0909</span>
+                    </div>
+                </a>
+
+                <!-- GitHub Profile Link (Opens in new tab) -->
+                <a href="https://github.com/tag04120115" target="_blank" rel="noopener noreferrer" class="c-item" title="깃허브 프로필 주소 이동 (새 창)">
+                    <div class="c-icon">
+                        <i data-lucide="github"></i>
+                    </div>
+                    <div class="c-meta">
+                        <span class="c-type">GITHUB</span>
+                        <span class="c-val">github.com/tag04120115</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- ── INQUIRY FORM ── -->
+            <div class="inquiry-box">
+                <h3 class="inquiry-box-title"><i data-lucide="message-square" style="color: var(--gold); vertical-align: middle; margin-right: 6px;"></i> 간편 문의 및 메시지 남기기</h3>
+                <p class="inquiry-box-desc">연락처와 문의하실 내용을 남겨주시면 신속하게 답변해 드리겠습니다.</p>
+                <form id="inquiry-form">
+                    <div class="inquiry-form-row">
+                        <div class="form-group" style="text-align: left;">
+                            <label for="inquiry-name">성함 / 회사명</label>
+                            <input type="text" id="inquiry-name" required placeholder="예: 홍길동 (길동상사)">
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label for="inquiry-contact">연락처 (전화번호/이메일)</label>
+                            <input type="text" id="inquiry-contact" required placeholder="예: 010-0000-0000">
+                        </div>
+                    </div>
+                    <div class="form-group" style="text-align: left; margin-bottom: 16px;">
+                        <label for="inquiry-message">문의 내용</label>
+                        <textarea id="inquiry-message" rows="3" required placeholder="문의하실 내용을 자유롭게 남겨주세요."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-g" style="width: 100%; min-height: 48px; border-radius: 8px; font-weight: 700; font-size: 14px;">
+                        <i data-lucide="send"></i>
+                        <span>문의 보내기</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Footer Save Contact CTA and Copyright -->
+            <div class="c-foot">
+                <p class="c-foot-q">연락처를 스마트폰에 바로 저장하시겠습니까?</p>
+                <a href="contact.vcf" download class="btn btn-g" title="김영탁 파트너 연락처 (.vcf) 다운로드">
+                    <i data-lucide="user-plus"></i>
+                    <span>연락처 스마트폰에 저장</span>
+                </a>
+                <p class="c-copy">
+                    &copy; 2026 KIM YOUNG TAK. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── QR CODE FLOATING ACTION BUTTON ── -->
+    <button class="qr-float" id="qr-btn" aria-label="QR 코드 명함 공유 팝업 열기">
+        <i data-lucide="qr-code"></i>
+        <span>명함 공유</span>
+    </button>
+
+    <!-- ── QR CODE POPUP MODAL OVERLAY ── -->
+    <div class="qr-overlay" id="qr-overlay" role="dialog" aria-modal="true" aria-labelledby="qr-modal-title">
+        <div class="qr-card">
+            <!-- Modal Close Button -->
+            <button class="qr-close" id="qr-close" aria-label="팝업 닫기">
+                <i data-lucide="x"></i>
+            </button>
+            
+            <!-- Modal Header -->
+            <div class="qr-header">
+                <div class="qr-photo">
+                    <img src="프로필사진.jpg" alt="김영탁 파트너 프로필 사진" class="qr-photo-img">
+                </div>
+                <div class="qr-meta">
+                    <span class="qr-name-label">경영지도사</span>
+                    <h3 class="qr-name" id="qr-modal-title">김 영 탁</h3>
+                    <span class="qr-name-en">Partner / Consultant</span>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="qr-divider"></div>
+
+            <!-- Scan Area -->
+            <div class="qr-section">
+                <div class="qr-scan-label">SCAN QR CODE</div>
+                <div class="qr-wrap" id="qrcode">
+                    <!-- Dynamic QR Canvas/Image will render here by QRCode.js -->
+                </div>
+                <p class="qr-scan-hint">
+                    카메라로 스캔하면 모바일 전자명함 링크로 바로 연결됩니다.
+                </p>
+            </div>
+
+            <!-- Quick Action list inside Modal -->
+            <div class="qr-contacts">
+                <a href="tel:010-2685-5790" class="qr-c-row" title="전화걸기">
+                    <span class="c-icon" style="font-size: 16px;"><i data-lucide="phone"></i></span>
+                    <span class="c-val" style="font-size: 13px;">010-2685-5790</span>
+                </a>
+                <a href="contact.vcf" download class="qr-c-row" title="연락처 휴대폰 저장">
+                    <span class="c-icon" style="font-size: 16px;"><i data-lucide="user-plus"></i></span>
+                    <span class="c-val" style="font-size: 13px;">연락처 저장 (.vcf 다운로드)</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── TOAST NOTIFICATION ── -->
+    <div class="toast-banner" id="toast-banner" role="alert" aria-live="assertive">
+        <i data-lucide="check" style="color: var(--gold);"></i>
+        <span id="toast-message">주소가 복사되었습니다.</span>
+    </div>
+
+    <!-- ── SCRIPTS ── -->
+    <!-- Lucide Dynamic Vector Icons library -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Trigger Lucide SVG creation before user scripts
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+    </script>
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- QRCode.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Primary Javascript -->
+    <script src="script.js"></script>
+</body>
+</html>
