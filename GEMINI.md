@@ -5,7 +5,7 @@
 ## 📌 프로젝트 개요
 - **프로젝트 명**: digital-business-card (김영탁 · 디지털 프로필 명함)
 - **디지털 트윈 아키텍처 버전**: v1.0.0
-- **상태**: 코드 구현 완료 (Supabase API Key 입력 및 DB 활성화 대기)
+- **상태**: 원격 저장소 push 및 Vercel 배포 완료 (배포 URL: https://youngtak-card.vercel.app)
 
 ## 👥 협업 아키텍처 구성원
 1. **DEVELOPER (개발자 - USER)**: 김영탁
