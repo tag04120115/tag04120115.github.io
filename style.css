@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@300;400;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
 
 :root {
-    --bg: #f4f2ee;
+    --bg: #f1f5f9;
     --surface: #ffffff;
-    --navy: #1a3a5c;
-    --blue: #2563a8;
-    --gold: #c9973a;
+    --navy: #0f172a;
+    --blue: #1e3a8a;
+    --red: #ef4444;
     --green: #16a34a;
-    --text: #1e1e1e;
-    --muted: #6b7280;
-    --border: rgba(26, 58, 92, 0.13);
-    --shadow: 0 4px 32px rgba(26, 58, 92, 0.10);
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: rgba(30, 58, 138, 0.15);
+    --shadow: 0 4px 32px rgba(30, 58, 138, 0.08);
     --r: 18px;
     --sans: 'Noto Sans KR', sans-serif;
     --serif: 'Noto Serif KR', serif;
@@ -108,7 +108,7 @@ nav {
 #hero {
     min-height: 100vh;
     padding: 100px 24px 80px;
-    background: linear-gradient(155deg, #0f2540 0%, #1a3a5c 55%, #1e4570 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #030712 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -124,7 +124,7 @@ nav {
     width: 500px;
     height: 500px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(201, 151, 58, 0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(239, 68, 68, 0.15) 0%, transparent 70%);
     pointer-events: none;
 }
 
@@ -136,7 +136,7 @@ nav {
     width: 400px;
     height: 400px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(37, 99, 168, 0.18) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(30, 58, 138, 0.25) 0%, transparent 70%);
     pointer-events: none;
 }
 
@@ -155,11 +155,11 @@ nav {
     width: 170px;
     height: 170px;
     border-radius: 50%;
-    border: 3.5px solid rgba(201, 151, 58, 0.75);
+    border: 3.5px solid rgba(239, 68, 68, 0.75);
     overflow: hidden;
     flex-shrink: 0;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
-    background: #0f2540;
+    background: #0f172a;
 }
 
 .hero-photo-img {
@@ -176,9 +176,9 @@ nav {
 
 .badge {
     display: inline-block;
-    background: rgba(201, 151, 58, 0.18);
-    border: 1px solid rgba(201, 151, 58, 0.4);
-    color: var(--gold);
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: var(--red);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.15em;
@@ -215,7 +215,7 @@ nav {
 
 .hero-quote {
     background: rgba(255, 255, 255, 0.05);
-    border-left: 3.5px solid var(--gold);
+    border-left: 3.5px solid var(--red);
     border-radius: 0 12px 12px 0;
     padding: 18px 22px;
     margin-bottom: 28px;
@@ -250,12 +250,12 @@ nav {
 }
 
 .btn-g {
-    background: var(--gold);
+    background: var(--red);
     color: #ffffff;
 }
 
 .btn-g:hover {
-    background: #b5832b;
+    background: #dc2626;
     transform: translateY(-2px);
 }
 
@@ -287,7 +287,7 @@ nav {
     font-size: 11px;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--red);
     font-weight: 700;
     margin-bottom: 8px;
 }
@@ -343,8 +343,8 @@ nav {
 
 /* Tab 1 Highlighted style */
 .domain-tab.tab-overview {
-    background: linear-gradient(135deg, var(--navy) 0%, #1c436b 100%);
-    border-color: rgba(201, 151, 58, 0.25);
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    border-color: rgba(239, 68, 68, 0.25);
     margin-bottom: 4px;
     border-radius: var(--r);
 }
@@ -354,7 +354,7 @@ nav {
 }
 
 .domain-tab.tab-overview .tab-num {
-    color: var(--gold);
+    color: var(--red);
 }
 
 .domain-tab.tab-overview .tab-name {
@@ -366,12 +366,12 @@ nav {
 }
 
 .domain-tab.tab-overview .tab-arrow {
-    color: var(--gold);
+    color: var(--red);
 }
 
 .domain-tab.tab-overview .tab-icon {
-    background: rgba(201, 151, 58, 0.18);
-    color: var(--gold);
+    background: rgba(239, 68, 68, 0.18);
+    color: var(--red);
 }
 
 .tab-header {
@@ -399,7 +399,7 @@ nav {
     flex-shrink: 0;
 }
 
-.ic0 { background: rgba(201, 151, 58, 0.15); color: var(--gold); }
+.ic0 { background: rgba(239, 68, 68, 0.15); color: var(--red); }
 .ic1 { background: rgba(37, 99, 168, 0.1); color: var(--blue); }
 .ic2 { background: rgba(22, 163, 74, 0.1); color: var(--green); }
 .ic3 { background: rgba(147, 51, 234, 0.1); color: #9333ea; }
@@ -412,7 +412,7 @@ nav {
 .tab-num {
     font-size: 10px;
     letter-spacing: 0.15em;
-    color: var(--gold);
+    color: var(--red);
     font-weight: 700;
     margin-bottom: 2px;
     text-transform: uppercase;
@@ -469,7 +469,7 @@ nav {
     font-size: 12.5px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--red);
     font-weight: 700;
     margin: 24px 0 12px;
     display: flex;
@@ -498,8 +498,8 @@ nav {
 }
 
 .competency-list li:nth-child(3) {
-    background: rgba(201, 151, 58, 0.06);
-    border-left-color: var(--gold);
+    background: rgba(239, 68, 68, 0.06);
+    border-left-color: var(--red);
 }
 
 .competency-list li:nth-child(4) {
@@ -536,7 +536,7 @@ nav {
     background: var(--bg);
     border-radius: 12px;
     padding: 16px 20px;
-    border-left: 4.5px solid var(--gold);
+    border-left: 4.5px solid var(--red);
 }
 
 .overview-item-title {
@@ -556,7 +556,7 @@ nav {
 .tl-wrap {
     display: flex;
     flex-direction: column;
-    border-left: 2px solid rgba(201, 151, 58, 0.35);
+    border-left: 2px solid rgba(239, 68, 68, 0.35);
     padding-left: 20px;
     margin-bottom: 12px;
     gap: 16px;
@@ -573,14 +573,14 @@ nav {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--gold);
+    background: var(--red);
 }
 
 .tl-date {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.08em;
-    color: var(--gold);
+    color: var(--red);
     margin-bottom: 2px;
 }
 
@@ -662,12 +662,12 @@ nav {
 .c-item:hover {
     background: rgba(255, 255, 255, 0.12);
     transform: translateY(-2px);
-    border-color: rgba(201, 151, 58, 0.35);
+    border-color: rgba(239, 68, 68, 0.35);
 }
 
 .c-icon {
     font-size: 22px;
-    color: var(--gold);
+    color: var(--red);
     display: flex;
     align-items: center;
 }
@@ -681,7 +681,7 @@ nav {
     font-size: 9.5px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--red);
     margin-bottom: 2px;
     font-weight: 700;
 }
@@ -719,7 +719,7 @@ nav {
     bottom: 24px;
     right: 24px;
     z-index: 150;
-    background: var(--gold);
+    background: var(--red);
     color: #ffffff;
     border: none;
     border-radius: 50px;
@@ -729,7 +729,7 @@ nav {
     cursor: pointer;
     font-family: var(--sans);
     letter-spacing: 0.05em;
-    box-shadow: 0 4px 20px rgba(201, 151, 58, 0.4);
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -739,7 +739,7 @@ nav {
 
 .qr-float:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(201, 151, 58, 0.55);
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.55);
 }
 
 /* ── QR MODAL OVERLAY ── */
@@ -763,7 +763,7 @@ nav {
 /* ── QR MODAL CARD ── */
 .qr-card {
     position: relative;
-    background: linear-gradient(145deg, #0f2540 0%, #1a3a5c 60%, #1e4570 100%);
+    background: linear-gradient(145deg, #0f172a 0%, #1e3a8a 60%, #1e40af 100%);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 24px;
     padding: 36px 32px 32px;
@@ -777,7 +777,7 @@ nav {
     position: absolute;
     width: 20px;
     height: 20px;
-    border-color: var(--gold);
+    border-color: var(--red);
     border-style: solid;
 }
 
@@ -829,8 +829,8 @@ nav {
     height: 72px;
     border-radius: 50%;
     flex-shrink: 0;
-    border: 2px solid rgba(201, 151, 58, 0.6);
-    background: #0f2540;
+    border: 2px solid rgba(239, 68, 68, 0.6);
+    background: #0f172a;
     overflow: hidden;
     box-shadow: 0 0 16px rgba(0, 0, 0, 0.35);
 }
@@ -851,7 +851,7 @@ nav {
     font-size: 9px;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--red);
     font-weight: 700;
     margin-bottom: 4px;
 }
@@ -876,7 +876,7 @@ nav {
 .qr-divider {
     width: 100%;
     height: 1px;
-    background: linear-gradient(90deg, var(--gold), transparent);
+    background: linear-gradient(90deg, var(--red), transparent);
     margin-bottom: 24px;
 }
 
@@ -989,14 +989,14 @@ nav {
         top: 60px;
         left: 0;
         right: 0;
-        background: rgba(244, 242, 238, 0.98);
+        background: rgba(15, 23, 42, 0.97);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         flex-direction: column;
         gap: 0;
         padding: 10px 0;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-        border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     
     .nav-links.open {
@@ -1013,7 +1013,8 @@ nav {
         padding: 14px 0;
         border-radius: 0;
         font-size: 14px;
-        border-bottom: 1px solid rgba(26, 58, 92, 0.05);
+        color: rgba(255, 255, 255, 0.75);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
     
     .nav-links li:last-child a {
@@ -1022,7 +1023,7 @@ nav {
     
     .nav-links a:hover, .nav-links a.active {
         background: transparent;
-        color: var(--navy);
+        color: var(--red);
         font-weight: 700;
     }
 }
@@ -1060,7 +1061,7 @@ nav {
 
 .inquiry-box form .form-group input:focus, 
 .inquiry-box form .form-group textarea:focus {
-    border-color: var(--gold) !important;
+    border-color: var(--red) !important;
     background: rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -1088,7 +1089,7 @@ nav {
 .inquiry-box form .form-group label {
     font-size: 11px;
     font-weight: 700;
-    color: var(--gold);
+    color: var(--red);
     letter-spacing: 0.15em;
     display: block;
     margin-bottom: 6px;
@@ -1097,7 +1098,7 @@ nav {
 
 .inquiry-box form .form-group input:focus, 
 .inquiry-box form .form-group textarea:focus {
-    border-color: var(--gold) !important;
+    border-color: var(--red) !important;
     background: rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -1108,5 +1109,18 @@ nav {
     .inquiry-form-row {
         grid-template-columns: 1fr;
         gap: 12px;
+    }
+}
+
+@media(max-width: 480px) {
+    .btn-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .btn-row .btn {
+        padding: 10px 12px;
+        font-size: 12px;
+        min-height: 44px;
     }
 }
