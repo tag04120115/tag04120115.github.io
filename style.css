@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@300;400;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
 
 :root {
-    --bg: #f1f5f9;
+    --bg: #fbf9f3;
     --surface: #ffffff;
     --navy: #0f172a;
     --blue: #1e3a8a;
@@ -46,7 +46,7 @@ nav {
     left: 0;
     right: 0;
     z-index: 200;
-    background: rgba(244, 242, 238, 0.93);
+    background: rgba(251, 249, 243, 0.93);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
