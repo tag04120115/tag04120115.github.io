@@ -191,24 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // ── 5. SUPABASE DB INQUIRY SUBMISSION ──
-    const SUPABASE_URL = 'https://lpxowhmcbeaszaiehxdv.supabase.co'; 
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxweG93aG1jYmVhc3phaWVoeGR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NTQ0OTMsImV4cCI6MjA5ODEzMDQ5M30.HF-fzoX_Doh7vg6jhjMr2y0PTJBMvkK3xbo4jXPf2mw';
-    
-    let supabase = null;
-    const isSupabaseConfigured = SUPABASE_URL !== 'YOUR_SUPABASE_PROJECT_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
-    
-    if (isSupabaseConfigured && window.supabase) {
-        try {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        } catch (e) {
-            console.error("Supabase client failed initialization:", e);
-        }
-    }
-
+    // ── 5. EMAIL INQUIRY SUBMISSION (mailto: integration) ──
     const inquiryForm = document.getElementById('inquiry-form');
     if (inquiryForm) {
-        inquiryForm.addEventListener('submit', async (e) => {
+        inquiryForm.addEventListener('submit', (e) => {
             e.preventDefault();
             e.stopPropagation();
             
@@ -223,48 +209,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            if (!isSupabaseConfigured || !supabase) {
-                showToast("DB 설정이 완성되지 않았습니다.");
-                return;
-            }
-
-            const submitBtn = inquiryForm.querySelector('button[type="submit"]');
-            const originalBtnHtml = submitBtn.innerHTML;
+            const recipient = 'tag0909@naver.com';
+            const subject = encodeURIComponent(`[혜성경영기술원 모바일명함] ${nameVal}님의 상담 신청`);
             
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>전송 중...</span>';
-
+            const emailBody = `[간편 상담 신청 정보]\n` +
+                              `- 신청인/회사명: ${nameVal}\n` +
+                              `- 연락처: ${phoneVal}\n` +
+                              `- 이메일: ${emailVal || '미입력'}\n` +
+                              `- 상담 분야: ${typeVal}\n\n` +
+                              `[문의 내용]\n` +
+                              `${messageVal}`;
+                              
+            const body = encodeURIComponent(emailBody);
+            
+            // mailto 링크 생성 및 이동
+            const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${body}`;
+            
             try {
-                const { error } = await supabase
-                    .from('consulting_inquiries')
-                    .insert([
-                        { 
-                            name: nameVal, 
-                            phone: phoneVal, 
-                            email: emailVal || null, 
-                            inquiry_type: typeVal, 
-                            message: messageVal 
-                        }
-                    ]);
-
-                if (error) throw error;
-
+                window.location.href = mailtoUrl;
+                
                 const inquiryModal = document.getElementById('modal-inquiry');
                 if (inquiryModal) {
                     closeModal(inquiryModal);
                 }
-
-                showToast("문의가 성공적으로 전송되었습니다.");
+                
+                showToast("메일 전송 창이 실행되었습니다.");
                 inquiryForm.reset();
             } catch (err) {
-                console.error("Supabase submission error:", err);
-                showToast("전송에 실패했습니다. 대표 번호로 연락 부탁드립니다.");
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnHtml;
-                if (window.lucide) {
-                    window.lucide.createIcons();
-                }
+                console.error("Mailto redirection error:", err);
+                showToast("메일 연동에 실패했습니다. 대표 번호로 연락 부탁드립니다.");
             }
         });
     }
