@@ -191,54 +191,84 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // ── 5. EMAIL INQUIRY SUBMISSION (mailto: integration) ──
+    // ── 5. EMAIL & SMS INQUIRY SUBMISSION (mailto: & sms: integration) ──
     const inquiryForm = document.getElementById('inquiry-form');
-    if (inquiryForm) {
+    const btnEmail = document.getElementById('btn-submit-email');
+    const btnSms = document.getElementById('btn-submit-sms');
+
+    if (inquiryForm && btnEmail && btnSms) {
+        // Prevent default form submit on Enter key press
         inquiryForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            e.stopPropagation();
-            
+        });
+
+        const handleSubmission = (type) => {
             const nameVal = document.getElementById('inquiry-name').value.trim();
             const phoneVal = document.getElementById('inquiry-phone').value.trim();
             const emailVal = document.getElementById('inquiry-email').value.trim();
             const typeVal = document.getElementById('inquiry-type').value;
             const messageVal = document.getElementById('inquiry-message').value.trim();
             
+            // Validate required fields
             if (!nameVal || !phoneVal || !typeVal || !messageVal) {
                 showToast("필수 항목을 모두 입력해 주세요.");
+                
+                // Focus empty fields
+                if (!nameVal) document.getElementById('inquiry-name').focus();
+                else if (!phoneVal) document.getElementById('inquiry-phone').focus();
+                else if (!typeVal) document.getElementById('inquiry-type').focus();
+                else if (!messageVal) document.getElementById('inquiry-message').focus();
                 return;
             }
 
-            const recipient = 'tag0909@naver.com';
-            const subject = encodeURIComponent(`[혜성경영기술원 모바일명함] ${nameVal}님의 상담 신청`);
+            const clientInfo = `[간편 상담 신청 정보]\n` +
+                               `- 신청인/회사명: ${nameVal}\n` +
+                               `- 연락처: ${phoneVal}\n` +
+                               `- 이메일: ${emailVal || '미입력'}\n` +
+                               `- 상담 분야: ${typeVal}\n\n` +
+                               `[문의 내용]\n` +
+                               `${messageVal}`;
             
-            const emailBody = `[간편 상담 신청 정보]\n` +
-                              `- 신청인/회사명: ${nameVal}\n` +
-                              `- 연락처: ${phoneVal}\n` +
-                              `- 이메일: ${emailVal || '미입력'}\n` +
-                              `- 상담 분야: ${typeVal}\n\n` +
-                              `[문의 내용]\n` +
-                              `${messageVal}`;
-                              
-            const body = encodeURIComponent(emailBody);
-            
-            // mailto 링크 생성 및 이동
-            const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${body}`;
-            
-            try {
-                window.location.href = mailtoUrl;
+            const encodedBody = encodeURIComponent(clientInfo);
+
+            if (type === 'email') {
+                const recipient = 'tag0909@naver.com';
+                const subject = encodeURIComponent(`[혜성경영기술원 모바일명함] ${nameVal}님의 상담 신청`);
+                const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${encodedBody}`;
                 
-                const inquiryModal = document.getElementById('modal-inquiry');
-                if (inquiryModal) {
-                    closeModal(inquiryModal);
+                try {
+                    window.location.href = mailtoUrl;
+                    showToast("메일 전송 창이 실행되었습니다.");
+                } catch (err) {
+                    console.error("Mailto error:", err);
+                    showToast("메일 앱 연동에 실패했습니다.");
                 }
+            } else if (type === 'sms') {
+                const recipient = '010-2685-5790';
+                // Detect iOS for SMS separator compatibility
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                const separator = isIOS ? '&' : '?';
+                const smsUrl = `sms:${recipient}${separator}body=${encodedBody}`;
                 
-                showToast("메일 전송 창이 실행되었습니다.");
-                inquiryForm.reset();
-            } catch (err) {
-                console.error("Mailto redirection error:", err);
-                showToast("메일 연동에 실패했습니다. 대표 번호로 연락 부탁드립니다.");
+                try {
+                    window.location.href = smsUrl;
+                    showToast("문자 메시지 창이 실행되었습니다.");
+                } catch (err) {
+                    console.error("SMS error:", err);
+                    showToast("문자 앱 연동에 실패했습니다.");
+                }
             }
-        });
+
+            // Close modal and reset form
+            const inquiryModal = document.getElementById('modal-inquiry');
+            if (inquiryModal) {
+                closeModal(inquiryModal);
+            }
+            inquiryForm.reset();
+        };
+
+        btnEmail.addEventListener('click', () => handleSubmission('email'));
+        btnSms.addEventListener('click', () => handleSubmission('sms'));
     }
 });
