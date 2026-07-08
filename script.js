@@ -1,206 +1,178 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Mobile Hamburger Menu Toggle
-    const menuBtn = document.getElementById('menu-btn');
-    const navLinks = document.getElementById('nav-links');
+    // ── 1. 3D CARD FLIP MECHANISM ──
+    const businessCard = document.getElementById('business-card');
+    const flipTrigger = document.getElementById('flip-trigger');
+    const flipText = document.getElementById('flip-text');
+    const flipIcon = flipTrigger ? flipTrigger.querySelector('i') : null;
+
+    function toggleFlip(e) {
+        // Prevent flipping if user clicked on an interactive link or button inside the card
+        if (e && (e.target.closest('a') || e.target.closest('button'))) {
+            return;
+        }
+        
+        const isFlipped = businessCard.classList.toggle('flipped');
+        
+        if (flipText) {
+            flipText.textContent = isFlipped ? '앞면 보기' : '뒷면 보기';
+        }
+        
+        // Update Lucide icon dynamically if needed
+        if (flipIcon && window.lucide) {
+            if (isFlipped) {
+                flipIcon.setAttribute('data-lucide', 'undo-2');
+            } else {
+                flipIcon.setAttribute('data-lucide', 'rotate-3d');
+            }
+            window.lucide.createIcons();
+        }
+    }
+
+    if (businessCard) {
+        businessCard.addEventListener('click', toggleFlip);
+    }
     
-    if (menuBtn && navLinks) {
-        menuBtn.addEventListener('click', (e) => {
+    if (flipTrigger) {
+        flipTrigger.addEventListener('click', (e) => {
             e.stopPropagation();
-            navLinks.classList.toggle('open');
-            // Change hamburger icon/aria state if needed
-            const icon = menuBtn.querySelector('i');
-            if (icon) {
-                if (navLinks.classList.contains('open')) {
-                    icon.setAttribute('data-lucide', 'x');
-                } else {
-                    icon.setAttribute('data-lucide', 'menu');
-                }
-                if (window.lucide) window.lucide.createIcons();
-            }
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && e.target !== menuBtn) {
-                navLinks.classList.remove('open');
-                const icon = menuBtn.querySelector('i');
-                if (icon) {
-                    icon.setAttribute('data-lucide', 'menu');
-                    if (window.lucide) window.lucide.createIcons();
-                }
-            }
-        });
-
-        // Close menu when clicking link
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('open');
-                const icon = menuBtn.querySelector('i');
-                if (icon) {
-                    icon.setAttribute('data-lucide', 'menu');
-                    if (window.lucide) window.lucide.createIcons();
-                }
-            });
+            toggleFlip();
         });
     }
 
-    // 2. Active Section Highlighting on Nav links
-    const sections = document.querySelectorAll('section');
-    const navItems = document.querySelectorAll('.nav-links a');
 
-    const observerOptions = {
-        root: null,
-        rootMargin: '-50% 0px -50% 0px', // triggers when section occupies center of viewport
-        threshold: 0
-    };
+    // ── 2. MODAL OVERLAY TRIGGERS ──
+    const modalButtons = document.querySelectorAll('[data-modal]');
+    const modalOverlays = document.querySelectorAll('.modal-overlay');
+    const modalCloses = document.querySelectorAll('.modal-close');
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const id = entry.target.getAttribute('id');
-                navItems.forEach(item => {
-                    if (item.getAttribute('href') === `#${id}`) {
-                        item.classList.add('active');
-                    } else {
-                        item.classList.remove('active');
-                    }
-                });
-            }
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Lock back scroll
+        }
+    }
+
+    function closeModal(modal) {
+        modal.classList.remove('show');
+        // Check if any other modal is still open before unlocking scroll
+        const anyOpen = Array.from(modalOverlays).some(m => m.classList.contains('show'));
+        const qrOpen = document.getElementById('qr-overlay')?.classList.contains('show');
+        if (!anyOpen && !qrOpen) {
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Attach open triggers to buttons
+    modalButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const modalId = btn.getAttribute('data-modal');
+            openModal(modalId);
         });
-    }, observerOptions);
-
-    sections.forEach(section => {
-        observer.observe(section);
     });
 
-    // 3. Smooth Dynamic Height Accordion
-    function initAccordion() {
-        const tabs = document.querySelectorAll('.domain-tab');
-        
-        tabs.forEach((tab) => {
-            const header = tab.querySelector('.tab-header');
-            const body = tab.querySelector('.tab-body');
-            
-            if (!header || !body) return;
+    // Attach close triggers
+    modalCloses.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const modal = btn.closest('.modal-overlay');
+            if (modal) closeModal(modal);
+        });
+    });
 
-            header.addEventListener('click', () => {
-                const isOpen = tab.classList.contains('open');
-                
-                // Close all tabs
-                tabs.forEach((t) => {
-                    t.classList.remove('open');
-                    const b = t.querySelector('.tab-body');
-                    if (b) b.style.maxHeight = null;
-                });
-                
-                // If the clicked tab wasn't open, open it
-                if (!isOpen) {
-                    tab.classList.add('open');
-                    // Set max-height to scrollHeight to animate smoothly
-                    body.style.maxHeight = body.scrollHeight + 'px';
-                }
-            });
-
-            // If it is the default overview tab, open it on load
-            if (tab.classList.contains('tab-overview')) {
-                tab.classList.add('open');
-                // Allow browser a tiny paint window to calculate scrollHeight
-                setTimeout(() => {
-                    body.style.maxHeight = body.scrollHeight + 'px';
-                }, 100);
+    // Close modal on background clicks
+    modalOverlays.forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeModal(overlay);
             }
         });
+    });
 
-        // Re-calculate heights on window resize
-        window.addEventListener('resize', () => {
-            tabs.forEach(tab => {
-                if (tab.classList.contains('open')) {
-                    const body = tab.querySelector('.tab-body');
-                    if (body) body.style.maxHeight = body.scrollHeight + 'px';
-                }
-            });
-        });
-    }
 
-    initAccordion();
-
-    // 4. QR Code Modal Logic
-    const qrBtn = document.getElementById('qr-btn');
+    // ── 3. QR CODE SHARING MODAL ──
+    const shareBtn = document.getElementById('share-btn');
     const qrOverlay = document.getElementById('qr-overlay');
     const qrClose = document.getElementById('qr-close');
     const qrcodeContainer = document.getElementById('qrcode');
+    const cardUrl = 'https://tag04120115.github.io/';
     let qrInitialized = false;
 
-    if (qrBtn && qrOverlay && qrClose && qrcodeContainer) {
-        qrBtn.addEventListener('click', () => {
+    function openQrShare() {
+        if (qrOverlay) {
             qrOverlay.classList.add('show');
-            document.body.style.overflow = 'hidden'; // prevent scroll
+            document.body.style.overflow = 'hidden';
 
-            if (!qrInitialized) {
-                // Initialize QRCode.js
-                // Target URL is the current site deployment address
-                const targetUrl = 'https://tag04120115.github.io/';
+            if (!qrInitialized && qrcodeContainer) {
                 try {
                     new QRCode(qrcodeContainer, {
-                        text: targetUrl,
-                        width: 160,
-                        height: 160,
-                        colorDark : "#1e3a8a",
+                        text: cardUrl,
+                        width: 150,
+                        height: 150,
+                        colorDark : "#1a3a5c", // corporate navy
                         colorLight : "#ffffff",
                         correctLevel : QRCode.CorrectLevel.H
                     });
                     qrInitialized = true;
-                } catch (e) {
-                    console.error("QR Code initialization failed:", e);
+                } catch (err) {
+                    console.error("QR creation error:", err);
                 }
             }
-        });
-
-        const closeQR = () => {
-            qrOverlay.classList.remove('show');
-            document.body.style.overflow = ''; // restore scroll
-        };
-
-        qrClose.addEventListener('click', closeQR);
-        
-        // Close modal on background click
-        qrOverlay.addEventListener('click', (e) => {
-            if (e.target === qrOverlay) {
-                closeQR();
-            }
-        });
+        }
     }
 
-    // 5. Native Sharing & Clipboard Copy Trigger
-    const shareBtn = document.getElementById('share-btn');
+    function closeQrShare() {
+        if (qrOverlay) {
+            qrOverlay.classList.remove('show');
+            const anyOpen = Array.from(modalOverlays).some(m => m.classList.contains('show'));
+            if (!anyOpen) {
+                document.body.style.overflow = '';
+            }
+        }
+    }
+
     if (shareBtn) {
-        shareBtn.addEventListener('click', () => {
+        shareBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            // Try Native Share API first
             const shareData = {
-                title: '김영탁 · 디지털 프로필 명함',
-                text: '소상공인의 경영개선을 돕는 경영지도사 김영탁 파트너의 모바일 명함입니다.',
-                url: 'https://tag04120115.github.io/'
+                title: '혜성경영기술원 김영탁 | 모바일 명함',
+                text: '경진단부터 AI 디지털 전환까지, 성장 파트너 김영탁 경영지도사입니다.',
+                url: cardUrl
             };
 
             if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
                 navigator.share(shareData)
-                    .catch((e) => {
-                        if (e.name !== 'AbortError') {
-                            fallbackCopyUrl();
+                    .catch((err) => {
+                        if (err.name !== 'AbortError') {
+                            openQrShare(); // Fallback to QR modal if Native share fails
                         }
                     });
             } else {
-                fallbackCopyUrl();
+                openQrShare(); // Fallback to QR modal if Native share is unavailable
             }
         });
     }
 
-    function fallbackCopyUrl() {
-        navigator.clipboard.writeText('https://tag04120115.github.io/')
-            .then(() => showToast("명함 주소가 복사되었습니다."))
-            .catch(() => showToast("주소 복사에 실패했습니다."));
+    if (qrClose) {
+        qrClose.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeQrShare();
+        });
     }
 
-    // 6. Toast Notification Banner
+    if (qrOverlay) {
+        qrOverlay.addEventListener('click', (e) => {
+            if (e.target === qrOverlay) {
+                closeQrShare();
+            }
+        });
+    }
+
+
+    // ── 4. TOAST NOTIFICATION BANNER ──
     const toastBanner = document.getElementById('toast-banner');
     const toastMessage = document.getElementById('toast-message');
 
@@ -213,21 +185,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2800);
     }
 
-    // 7. Supabase Database Connection & Inquiry Submission
-    // [설정 방법] Supabase 대시보드 프로젝트 설정 -> API에서 URL과 anon public key를 복사하여 아래에 채워주세요.
+
+    // ── 5. SUPABASE DB INQUIRY SUBMISSION ──
     const SUPABASE_URL = 'https://lpxowhmcbeaszaiehxdv.supabase.co'; 
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxweG93aG1jYmVhc3phaWVoeGR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NTQ0OTMsImV4cCI6MjA5ODEzMDQ5M30.HF-fzoX_Doh7vg6jhjMr2y0PTJBMvkK3xbo4jXPf2mw';
     
     let supabase = null;
-    
-    // Check if configuration is set
     const isSupabaseConfigured = SUPABASE_URL !== 'YOUR_SUPABASE_PROJECT_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
     
     if (isSupabaseConfigured && window.supabase) {
         try {
             supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         } catch (e) {
-            console.error("Supabase client creation failed:", e);
+            console.error("Supabase client failed initialization:", e);
         }
     }
 
@@ -248,8 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (!isSupabaseConfigured || !supabase) {
-                showToast("DB 설정이 필요합니다. (script.js 파일의 SUPABASE_ANON_KEY 설정 필요)");
-                console.warn("Supabase is not configured yet. Set SUPABASE_ANON_KEY in script.js.");
+                showToast("DB 설정이 완성되지 않았습니다.");
                 return;
             }
 
@@ -270,21 +239,29 @@ document.addEventListener('DOMContentLoaded', () => {
                             email: emailVal || null, 
                             inquiry_type: typeVal, 
                             message: messageVal 
-                            // status: 'pending' (DB default)
                         }
                     ]);
 
                 if (error) throw error;
 
-                showToast("문의가 접수되었습니다.");
+                // Close the modal overlay after success
+                const inquiryModal = document.getElementById('modal-inquiry');
+                if (inquiryModal) {
+                    closeModal(inquiryModal);
+                }
+
+                showToast("문의가 성공적으로 전송되었습니다.");
                 inquiryForm.reset();
             } catch (err) {
-                console.error("Supabase insert error:", err);
-                showToast("저장 중 문제가 발생했습니다. 다시 시도해주세요.");
+                console.error("Supabase submission error:", err);
+                showToast("전송에 실패했습니다. 대표 번호로 연락 부탁드립니다.");
             } finally {
-                // Restore button
+                // Restore button state
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnHtml;
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
             }
         });
     }
