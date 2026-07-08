@@ -4,8 +4,8 @@
 
 ## 📌 프로젝트 개요
 - **프로젝트 명**: digital-business-card (김영탁 · 디지털 프로필 명함)
-- **디지털 트윈 아키텍처 버전**: v1.1.0 (2개 화면 탭 구조 개편)
-- **상태**: 로컬 개발 완료 및 GitHub Pages User site 배포 준비 완료 (배포 URL: https://tag04120115.github.io/)
+- **디지털 트윈 아키텍처 버전**: v1.2.2 (3D Flip 레이어 오작동 패치 및 캐시 버스팅 적용)
+- **상태**: 로컬 패치 완료 및 GitHub Pages User site 실시간 배포 완료 (배포 URL: https://tag04120115.github.io/)
 
 ## 👥 협업 아키텍처 구성원
 1. **DEVELOPER (개발자 - USER)**: 김영탁
