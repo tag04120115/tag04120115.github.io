@@ -978,3 +978,20 @@ body.modal-open {
         }
     }
 }
+
+/* ── 10. 3D GPU LAYER INTERFERENCE REMEDY ── */
+body.modal-open .mobile-card-wrapper {
+    pointer-events: none !important;
+    user-select: none !important;
+    filter: blur(5px);
+    opacity: 0.55;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.modal-overlay {
+    pointer-events: auto !important;
+}
+
+.modal-card {
+    pointer-events: auto !important;
+}
