@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>GitHub Pages + Codex로 모바일 명함 홈페이지 만들기</title>
+<meta content="소상공인 AI 강의용 HTML 슬라이드: GitHub Pages와 Codex Product Design으로 모바일 명함 홈페이지 제작, 배포, SEO 개념 설명과 네이버/구글 검색 등록 실습" name="description"/>
+<style>
+    :root{
+      --bg:#0b1020;
+      --bg2:#111832;
+      --panel:#141b36;
+      --panel2:#192244;
+      --text:#eef3ff;
+      --muted:#aab5d1;
+      --faint:#6f7a9c;
+      --line:rgba(255,255,255,.14);
+      --accent:#7dd3fc;
+      --accent2:#a78bfa;
+      --accent3:#34d399;
+      --warn:#fbbf24;
+      --danger:#fb7185;
+      --white:#ffffff;
+      --shadow:0 28px 70px rgba(0,0,0,.42);
+      --radius:28px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:radial-gradient(circle at 20% 10%, rgba(125,211,252,.22), transparent 36%), radial-gradient(circle at 85% 15%, rgba(167,139,250,.22), transparent 32%), linear-gradient(145deg,#070a14,#111832 58%,#080b16);color:var(--text);font-family:var(--sans);overflow:hidden;}
+    a{color:inherit;text-decoration:none}
+    .deck{position:relative;height:100dvh;width:100vw;padding:0;overflow:hidden;}
+    .stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;aspect-ratio:auto;max-height:none;flex:none;transform:translate(-50%, -50%) scale(var(--deck-scale,1));transform-origin:center center;will-change:transform;background:linear-gradient(135deg, rgba(20,27,54,.98), rgba(9,13,28,.98));border:1px solid rgba(255,255,255,.16);border-radius:34px;box-shadow:var(--shadow);overflow:hidden;}
+    .stage:before{content:"";position:absolute;inset:-2px;background:radial-gradient(circle at 92% 7%, rgba(52,211,153,.16), transparent 32%),radial-gradient(circle at 8% 92%, rgba(125,211,252,.14), transparent 35%);pointer-events:none;}
+    .slide{position:absolute;inset:0;padding:58px 70px 76px;display:none;isolation:isolate;}
+    .slide.active{display:block;animation:fade .18s ease-out;}
+    @keyframes fade{from{opacity:.28;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .slide-header{display:flex;align-items:flex-start;justify-content:space-between;gap:28px;margin-bottom:22px;}
+    .eyebrow{font-size:22px;font-weight:800;letter-spacing:.02em;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+    h1,h2,h3,p{margin:0}
+    h1{font-size:76px;line-height:1.04;letter-spacing:-.06em;font-weight:950;}
+    h2{font-size:58px;line-height:1.08;letter-spacing:-.055em;font-weight:930;}
+    h3{font-size:30px;line-height:1.18;letter-spacing:-.025em;font-weight:880;}
+    .lead{font-size:28px;line-height:1.5;color:var(--muted);font-weight:650;letter-spacing:-.02em;}
+    .big-lead{font-size:34px;line-height:1.45;color:#dce7ff;font-weight:760;letter-spacing:-.03em;}
+    .muted{color:var(--muted)}
+    .faint{color:var(--faint)}
+    .accent{color:var(--accent)}
+    .accent2{color:var(--accent2)}
+    .accent3{color:var(--accent3)}
+    .warn{color:var(--warn)}
+    .danger{color:var(--danger)}
+    .grid{display:grid;gap:18px;}
+    .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .grid.cols-4{grid-template-columns:repeat(4,1fr)}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.045));border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 10px 36px rgba(0,0,0,.16);}
+    .card.soft{background:rgba(255,255,255,.065)}
+    .card.highlight{border-color:rgba(125,211,252,.48);background:linear-gradient(180deg, rgba(125,211,252,.14), rgba(255,255,255,.045));}
+    .card.green{border-color:rgba(52,211,153,.46);background:linear-gradient(180deg, rgba(52,211,153,.13), rgba(255,255,255,.045));}
+    .card.warn{border-color:rgba(251,191,36,.48);background:linear-gradient(180deg, rgba(251,191,36,.14), rgba(255,255,255,.045));}
+    .card.danger{border-color:rgba(251,113,133,.48);background:linear-gradient(180deg, rgba(251,113,133,.13), rgba(255,255,255,.045));}
+    .card h3{margin-bottom:12px}
+    .card p,.card li{font-size:23px;line-height:1.42;color:var(--muted);font-weight:650;letter-spacing:-.018em;}
+    .card .num{font-size:58px;font-weight:950;line-height:1;color:var(--accent);letter-spacing:-.06em;margin-bottom:14px;}
+    ul.clean{list-style:none;margin:0;padding:0;display:grid;gap:12px;}
+    ul.check li{position:relative;padding-left:38px;}
+    ul.check li:before{content:"✓";position:absolute;left:0;top:0;color:var(--accent3);font-weight:950;}
+    ul.cross li{position:relative;padding-left:38px;}
+    ul.cross li:before{content:"×";position:absolute;left:0;top:0;color:var(--danger);font-weight:950;}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid var(--line);font-size:18px;font-weight:820;color:#dce7ff;white-space:nowrap;}
+    .pills{display:flex;flex-wrap:wrap;gap:10px;}
+    .hero-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;height:calc(100% - 8px);}
+    .phone{width:310px;aspect-ratio:9/18.6;border-radius:46px;padding:14px;background:linear-gradient(145deg,#313a5f,#0d1328);box-shadow:0 34px 80px rgba(0,0,0,.38), inset 0 0 0 2px rgba(255,255,255,.12);margin:auto;position:relative;}
+    .phone:before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:96px;height:23px;background:#070a14;border-radius:999px;z-index:4;}
+    .phone-screen{height:100%;border-radius:34px;overflow:hidden;background:#f8fafc;color:#111827;display:flex;flex-direction:column;position:relative;}
+    .phone-hero{padding:48px 22px 22px;background:linear-gradient(135deg,#e0f2fe,#ede9fe 70%,#fef3c7);}
+    .phone-hero .label{font-size:11px;font-weight:800;color:#6366f1;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+    .phone-hero .name{font-size:30px;font-weight:950;letter-spacing:-.06em;margin-bottom:8px;line-height:1.02}
+    .phone-hero .role{font-size:13px;font-weight:760;color:#4b5563;line-height:1.35}
+    .phone-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px 18px;background:white}
+    .phone-btn{font-size:11px;text-align:center;background:#111827;color:white;padding:10px 7px;border-radius:999px;font-weight:850}
+    .phone-section{padding:16px 18px;background:#fff;border-top:1px solid #e5e7eb}
+    .phone-section h4{margin:0 0 8px;font-size:13px;color:#111827}
+    .phone-row{display:flex;gap:8px;margin:8px 0}.phone-chip{height:22px;background:#e5e7eb;border-radius:999px;flex:1}.phone-chip:nth-child(2){flex:.7}.phone-card{height:54px;background:#f3f4f6;border-radius:16px;margin-top:8px}
+    .flow{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:22px;}
+    .flow .step{min-width:165px;text-align:center;padding:18px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.07);font-size:23px;font-weight:860;color:#eaf1ff;}
+    .arrow{font-size:34px;color:var(--accent);font-weight:950}
+    .codebox{position:relative;background:#070b18;border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:22px 22px 22px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);}
+    .codebox pre{margin:0;white-space:pre-wrap;font-family:var(--mono);font-size:18px;line-height:1.5;color:#d7e3ff;max-height:480px;overflow:auto;padding-right:4px;}
+    .copy-btn{position:absolute;right:14px;top:14px;border:0;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#07101f;font-weight:950;font-size:15px;padding:9px 13px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.18);}
+    .copy-btn.copied{background:linear-gradient(135deg,var(--accent3),#bef264)}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;}
+    .split.wide-left{grid-template-columns:1.22fr .78fr}.split.wide-right{grid-template-columns:.82fr 1.18fr}
+    .table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:22px;border:1px solid var(--line);}
+    .table th,.table td{padding:15px 18px;text-align:left;border-bottom:1px solid rgba(255,255,255,.11);font-size:21px;line-height:1.35;vertical-align:top;}
+    .table th{background:rgba(255,255,255,.09);color:#eaf1ff;font-weight:890}.table td{color:var(--muted);font-weight:650}.table tr:last-child td{border-bottom:none}
+    .url{font-family:var(--mono);font-size:22px;background:rgba(125,211,252,.12);border:1px solid rgba(125,211,252,.35);padding:14px 16px;border-radius:16px;color:#dff7ff;word-break:break-all;}
+    .kbd{font-family:var(--mono);font-weight:900;background:rgba(255,255,255,.13);border:1px solid var(--line);padding:5px 10px;border-radius:9px;font-size:.8em;color:#fff;}
+    .footer{position:absolute;left:70px;right:210px;bottom:28px;display:flex;align-items:center;justify-content:space-between;color:rgba(238,243,255,.58);font-size:15px;font-weight:780;letter-spacing:.01em;z-index:5}
+    .progress{position:absolute;left:0;right:0;bottom:0;height:7px;background:rgba(255,255,255,.08);z-index:8}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));transition:width .18s ease;}
+    .controls{position:absolute;right:70px;bottom:20px;display:flex;gap:8px;z-index:20}.controls button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.09);color:#fff;font-size:18px;font-weight:900;cursor:pointer}.controls button:hover{background:rgba(255,255,255,.16)}
+    .badge{display:inline-grid;place-items:center;width:52px;height:52px;border-radius:17px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#07101f;font-size:25px;font-weight:950;box-shadow:0 12px 30px rgba(0,0,0,.26);}
+    .mini-browser{border:1px solid var(--line);border-radius:24px;overflow:hidden;background:#0a0f22;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+    .browser-top{height:42px;display:flex;align-items:center;gap:8px;padding:0 16px;background:rgba(255,255,255,.08);border-bottom:1px solid var(--line)}
+    .dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.26)}
+    .browser-content{padding:22px}.browser-hero{border-radius:20px;padding:26px;background:linear-gradient(135deg,rgba(125,211,252,.22),rgba(167,139,250,.18));}.browser-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}.skeleton{height:72px;border-radius:16px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.08)}
+    .source-list{display:grid;gap:12px;margin-top:18px}.source-list a{display:block;padding:16px 18px;border:1px solid var(--line);background:rgba(255,255,255,.065);border-radius:16px;font-size:19px;font-weight:760;color:#dce7ff;word-break:break-word}
+    .stamp{position:absolute;right:70px;top:58px;transform:rotate(3deg);border:2px solid rgba(52,211,153,.6);color:#c7ffe7;border-radius:18px;padding:10px 16px;font-size:18px;font-weight:950;background:rgba(52,211,153,.08);}
+    .section-title{font-size:20px;color:var(--accent);font-weight:930;margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em}
+    .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px}.time-card{border-radius:22px;padding:20px;background:rgba(255,255,255,.07);border:1px solid var(--line)}.time-card strong{display:block;font-size:20px;color:var(--accent);margin-bottom:8px}.time-card span{font-size:21px;line-height:1.35;color:var(--muted);font-weight:690}
+    .qa-list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px}.qa-item{padding:18px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.07);font-size:22px;font-weight:780;color:#e9f0ff}.qa-item:before{content:"□ ";color:var(--accent3);font-weight:950}
+    .two-url{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}.url-card{padding:24px;border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.07)}.url-card h3{display:flex;align-items:center;gap:10px}.url-card .url{margin:16px 0}.url-card.recommended{border-color:rgba(52,211,153,.55);background:linear-gradient(180deg,rgba(52,211,153,.13),rgba(255,255,255,.05))}
+    .footnote{font-size:17px;line-height:1.45;color:var(--faint);font-weight:650;margin-top:14px}
+
+
+    .seo-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:16px;align-items:stretch;margin-top:30px;}
+    .seo-flow .card{min-height:230px;display:flex;flex-direction:column;justify-content:flex-start;}
+    .seo-arrow{display:grid;place-items:center;font-size:42px;font-weight:950;color:var(--accent);padding-top:74px;}
+    .serp-preview{margin-top:26px;border-radius:26px;background:#f8fafc;color:#111827;padding:30px 34px;box-shadow:0 24px 70px rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.18);}
+    .serp-small{font-size:18px;color:#4b5563;font-weight:750;margin-bottom:10px;}
+    .serp-title{font-size:34px;line-height:1.2;font-weight:920;color:#1d4ed8;letter-spacing:-.035em;margin-bottom:8px;}
+    .serp-url{font-family:var(--mono);font-size:18px;color:#047857;font-weight:800;margin-bottom:12px;}
+    .serp-desc{font-size:22px;line-height:1.45;color:#374151;font-weight:650;}
+    .seo-term{font-size:21px;line-height:1.42;color:var(--muted);font-weight:700;}
+    .seo-term strong{color:#fff;}
+
+    .generator-layout{display:grid;grid-template-columns:1fr 1.06fr;gap:20px;height:calc(100% - 120px);min-height:0;margin-top:6px;}
+    .generator-panel{position:relative;min-height:0;background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 18px 46px rgba(0,0,0,.18);overflow:hidden;display:flex;flex-direction:column;}
+    .generator-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:10px;}
+    .mini-tip{font-size:15px;line-height:1.35;color:var(--muted);font-weight:650;margin-top:-4px;margin-bottom:10px;}
+    .generator-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1 1 auto;min-height:0;max-height:none;overflow:auto;padding-right:6px;}
+    .form-field{display:block;min-width:0;}
+    .form-field.full{grid-column:1 / -1;}
+    .form-field span{display:block;font-size:13px;font-weight:900;color:#dce7ff;margin-bottom:5px;letter-spacing:-.01em;}
+    .form-field input,.form-field textarea{width:100%;border:1px solid rgba(255,255,255,.16);border-radius:13px;background:rgba(7,11,24,.72);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.35;padding:9px 11px;outline:none;}
+    .form-field textarea{resize:vertical;min-height:50px;}
+    .form-field input:focus,.form-field textarea:focus{border-color:rgba(125,211,252,.72);box-shadow:0 0 0 3px rgba(125,211,252,.12);}
+    .generator-actions{display:flex;gap:10px;align-items:center;margin-top:12px;flex:0 0 auto;}
+    .make-btn,.ghost-btn{border:0;border-radius:999px;font-weight:950;font-size:15px;padding:11px 15px;cursor:pointer;}
+    .make-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#07101f;box-shadow:0 10px 25px rgba(0,0,0,.2);}
+    .ghost-btn{background:rgba(255,255,255,.08);border:1px solid var(--line);color:#dce7ff;}
+    .generated-prompt pre{margin:10px 0 0;white-space:pre-wrap;font-family:var(--mono);font-size:14.2px;line-height:1.48;color:#d7e3ff;flex:1 1 auto;min-height:0;max-height:none;overflow:auto;background:#070b18;border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:18px 16px;}
+    
+
+    .verification-slide .grid.cols-2{gap:14px;margin-top:18px !important;}
+    .verification-slide .card{padding:18px 20px;border-radius:20px;}
+    .verification-slide .card h3{font-size:25px;margin-bottom:8px;}
+    .verification-slide .card p{font-size:20px;line-height:1.34;}
+    .verification-slide .debug-codebox{margin-top:16px !important;max-height:270px;display:flex;flex-direction:column;padding:18px;}
+    .verification-slide .debug-codebox pre{max-height:220px;overflow-y:auto;overflow-x:hidden;font-size:16.5px;line-height:1.48;padding-right:10px;}
+    .verification-slide .debug-codebox .copy-btn{top:10px;right:10px;}
+    .verification-slide .debug-codebox pre::-webkit-scrollbar,.codebox pre::-webkit-scrollbar,.generated-prompt pre::-webkit-scrollbar,.generator-form::-webkit-scrollbar{width:10px;height:10px;}
+    .verification-slide .debug-codebox pre::-webkit-scrollbar-thumb,.codebox pre::-webkit-scrollbar-thumb,.generated-prompt pre::-webkit-scrollbar-thumb,.generator-form::-webkit-scrollbar-thumb{background:rgba(255,255,255,.28);border-radius:999px;}
+    .verification-slide .debug-codebox pre::-webkit-scrollbar-track,.codebox pre::-webkit-scrollbar-track,.generated-prompt pre::-webkit-scrollbar-track,.generator-form::-webkit-scrollbar-track{background:rgba(255,255,255,.06);border-radius:999px;}
+
+    /* 발표 화면 고정을 위해 작은 화면에서도 슬라이드 내부 레이아웃을 재배치하지 않습니다. 전체 캔버스만 JS로 비율에 맞춰 축소/확대합니다. */
+    @media print{html,body{height:auto;overflow:visible;background:white}.deck{display:block;padding:0}.stage{width:100%;height:auto;max-height:none;aspect-ratio:auto;border:0;border-radius:0;box-shadow:none;background:white;color:#111}.slide{position:relative;display:block !important;page-break-after:always;min-height:100vh;color:#111;background:white}.slide *{color:#111 !important}.card,.codebox,.url-card,.mini-browser{border:1px solid #ddd;background:white;box-shadow:none}.footer,.controls,.progress{display:none}.copy-btn{display:none}}
+  </style>
+</head>
+<body>
+<div class="deck">
+<main aria-live="polite" class="stage" id="stage">
+<section class="slide active">
+<div class="hero-layout">
+<div>
+<div class="eyebrow">토요일 실습 · GitHub Pages + Codex</div>
+<h1>모바일 명함 홈페이지<br/><span class="accent">만들고 배포하기</span></h1>
+<p class="big-lead" style="margin-top:28px">Product Design으로 레퍼런스 명함 페이지를 참고하고, 내 정보로 바꿔서 실제 인터넷 주소까지 공개합니다.</p>
+<div class="pills" style="margin-top:32px">
+<span class="pill">HTML/CSS/JS</span><span class="pill">GitHub Pages</span><span class="pill">Codex</span><span class="pill">모바일 최적화</span><span class="pill">SEO 등록</span>
+</div>
+</div>
+<div aria-hidden="true" class="phone">
+<div class="phone-screen">
+<div class="phone-hero"><div class="label">Digital Profile</div><div class="name">홍 길 동</div><div class="role">대표 · 강사 · 브랜드 기획자<br/>내 사업을 한 장으로 소개하는 모바일 명함</div></div>
+<div class="phone-buttons"><div class="phone-btn">전화 걸기</div><div class="phone-btn">이메일</div></div>
+<div class="phone-section"><h4>핵심 역량</h4><div class="phone-row"><div class="phone-chip"></div><div class="phone-chip"></div></div><div class="phone-row"><div class="phone-chip"></div><div class="phone-chip"></div></div><div class="phone-card"></div></div>
+<div class="phone-section"><h4>Contact</h4><div class="phone-card"></div></div>
+</div>
+</div>
+</div>
+<div class="footer"><span>소상공인 AI 강의</span><span>1 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">오늘은 준비 파트가 아닙니다</div><h2>이미 끝난 것</h2></div><span class="badge">✓</span></div>
+<div class="grid cols-3" style="margin-top:30px">
+<div class="card green"><div class="num">01</div><h3>GitHub 계정 생성</h3><p>회원가입, 로그인, 기본 화면 확인은 완료된 상태로 시작합니다.</p></div>
+<div class="card green"><div class="num">02</div><h3>GitHub ↔ Codex 연결</h3><p>코덱스가 저장소를 보고 수정할 수 있는 연결까지 완료했습니다.</p></div>
+<div class="card green"><div class="num">03</div><h3>Codex 설치</h3><p>설치 설명을 길게 하지 않고 바로 제작 실습으로 들어갑니다.</p></div>
+</div>
+<div class="card highlight" style="margin-top:28px"><p class="big-lead">오늘 수업의 핵심은 <span class="accent">“AI에게 시켜서 만들고, 직접 배포하고, 검색 등록까지 해보는 경험”</span>입니다.</p></div>
+<div class="footer"><span>수업 전제</span><span>2 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">오늘 최종 산출물</div><h2>수업 끝나면 남는 것</h2></div></div>
+<div class="grid cols-2" style="margin-top:24px">
+<div class="card highlight"><h3>1. 내 명함 홈페이지</h3><p>이름, 소개, 핵심역량, 활동 분야, 연락처가 들어간 디지털 프로필 페이지</p></div>
+<div class="card highlight"><h3>2. 모바일에서 보기 좋은 화면</h3><p>휴대폰에서 글자가 잘 보이고 버튼을 누르기 쉬운 반응형 페이지</p></div>
+<div class="card green"><h3>3. GitHub Pages 공개 URL</h3><p>카카오톡, 문자, QR, SNS 프로필에 바로 넣을 수 있는 인터넷 주소</p></div>
+<div class="card green"><h3>4. SEO 기본 태그</h3><p>검색엔진과 카카오톡 미리보기에 필요한 title, description, OG 태그</p></div>
+<div class="card warn"><h3>5. 네이버/구글 소유확인 태그</h3><p>Search Advisor와 Search Console에서 받은 HTML meta 태그를 코드에 삽입</p></div>
+<div class="card"><h3>6. 다음 수업 연결</h3><p>오늘 만든 방식을 실제 사업 홈페이지 제작 흐름으로 확장</p></div>
+</div>
+<div class="footer"><span>산출물 중심 수업</span><span>3 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">왜 명함 페이지부터?</div><h2>백엔드 있는 홈페이지 전에<br/>먼저 성공해야 하는 것</h2></div></div>
+<div class="split wide-left" style="margin-top:30px">
+<div class="card danger"><h3>바로 사업 홈페이지부터 만들면</h3><ul class="clean cross" style="margin-top:14px"><li>예약, 문의, 결제, 관리자 화면까지 욕심이 커짐</li><li>디자인·코드·배포·검색등록을 한 번에 해야 함</li><li>수강생이 “내가 어디서 막혔는지” 알기 어려움</li></ul></div>
+<div class="card green"><h3>명함 페이지부터 만들면</h3><ul class="clean check" style="margin-top:14px"><li>정적 HTML만으로 결과물이 나옴</li><li>GitHub Pages 배포를 빠르게 체감함</li><li>모바일·SEO·디자인 복제 흐름을 한 번에 연습함</li></ul></div>
+</div>
+<div class="flow"><div class="step">명함 페이지</div><div class="arrow">→</div><div class="step">랜딩페이지</div><div class="arrow">→</div><div class="step">사업 홈페이지</div><div class="arrow">→</div><div class="step">백엔드 연동</div></div>
+<div class="footer"><span>단계적 성공 경험</span><span>4 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">오늘 진행 흐름</div><h2>4단계로 끝냅니다</h2></div></div>
+<div class="timeline">
+<div class="time-card"><strong>1단계</strong><span>레퍼런스 명함 페이지를 Product Design으로 분석</span></div>
+<div class="time-card"><strong>2단계</strong><span>내 명함 정보를 입력표에 작성하고 Codex에 전달</span></div>
+<div class="time-card"><strong>3단계</strong><span>GitHub Pages에 배포하고 모바일에서 확인</span></div>
+<div class="time-card"><strong>4단계</strong><span>SEO 태그와 네이버/구글 소유확인 태그 삽입</span></div>
+</div>
+<div class="card highlight" style="margin-top:34px"><p class="big-lead">사업 PRD는 이미 작성했으므로 오늘은 PRD를 새로 만들지 않습니다. 대신 <span class="accent">“명함 정보 입력표”</span>를 만들어 Codex에 그대로 붙여넣습니다.</p></div>
+<div class="footer"><span>오늘의 수업 구조</span><span>5 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">레퍼런스</div><h2>오늘 참고할 명함 페이지</h2></div></div>
+<div class="split wide-left" style="margin-top:20px">
+<div>
+<div class="url">https://jbpak3123-pixel.github.io/park-jangbae-card/</div>
+<div class="grid cols-2" style="margin-top:18px">
+<div class="card"><h3>상단 Hero</h3><p>이름, 직책, 한 줄 소개, 전화/이메일/연락처 저장 버튼</p></div>
+<div class="card"><h3>Expertise</h3><p>활동 분야와 핵심 역량을 카드/아코디언 형태로 정리</p></div>
+<div class="card"><h3>활동 사진</h3><p>프로필, 활동, 포트폴리오 이미지를 섹션별로 배치</p></div>
+<div class="card"><h3>Contact</h3><p>협업 문의, 프로젝트 상담, 연락처 영역으로 마무리</p></div>
+</div>
+</div>
+<div aria-hidden="true" class="mini-browser">
+<div class="browser-top"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+<div class="browser-content"><div class="browser-hero"><div class="pill">Digital Profile</div><h3 style="font-size:42px;margin-top:18px">박 장 배</h3><p class="muted" style="font-size:20px;margin-top:10px">대표 · 기획자 · 미술작가</p></div><div class="browser-grid"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div><div class="skeleton" style="height:110px;margin-top:14px"></div></div>
+</div>
+</div>
+<div class="footnote">수업에서는 레퍼런스의 구조와 분위기를 참고하되, 개인 정보·이미지·문구는 수강생 본인의 것으로 교체합니다.</div>
+<div class="footer"><span>레퍼런스 디자인</span><span>6 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">Product Design 사용 목적</div><h2>눈으로 보고 따라 만드는 일을<br/>AI에게 맡긴다</h2></div></div>
+<div class="grid cols-3" style="margin-top:30px">
+<div class="card"><div class="num">분석</div><p>레퍼런스의 레이아웃, 섹션 순서, 버튼 구성, 모바일 느낌을 분석</p></div>
+<div class="card"><div class="num">변환</div><p>수강생이 작성한 명함 정보로 텍스트와 콘텐츠를 교체</p></div>
+<div class="card"><div class="num">구현</div><p>GitHub Pages에서 바로 열리는 정적 HTML/CSS/JS로 제작</p></div>
+</div>
+<div class="card warn" style="margin-top:28px"><p class="big-lead">오늘은 복잡한 프레임워크보다 <span class="warn">순수 HTML/CSS/JS</span>를 우선합니다. 그래야 GitHub Pages 배포와 SEO 태그 삽입이 가장 쉽습니다.</p></div>
+<div class="footer"><span>Product Design → Codex</span><span>7 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">중요 원칙</div><h2>디자인은 참고하되<br/>내 콘텐츠로 바꾼다</h2></div></div>
+<div class="split" style="margin-top:30px">
+<div class="card green"><h3>좋은 요청</h3><ul class="clean check" style="margin-top:16px"><li>이 페이지의 구성, 분위기, UX를 참고해줘</li><li>내 이름, 내 소개, 내 사진, 내 연락처로 교체해줘</li><li>모바일에서 먼저 보기 좋게 만들어줘</li><li>검색등록용 meta 태그를 head에 넣을 수 있게 해줘</li></ul></div>
+<div class="card danger"><h3>피해야 할 요청</h3><ul class="clean cross" style="margin-top:16px"><li>타인의 문구와 이미지를 그대로 복사해줘</li><li>연락처와 개인정보를 확인 없이 임의로 넣어줘</li><li>모바일 확인 없이 PC 화면만 예쁘게 만들어줘</li><li>결제/로그인/비밀번호 입력을 GitHub Pages에서 처리해줘</li></ul></div>
+</div>
+<div class="footer"><span>콘텐츠 교체 원칙</span><span>8 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">모바일 우선</div><h2>명함 페이지는 PC보다<br/>휴대폰에서 더 많이 봅니다</h2></div></div>
+<div class="split wide-right" style="margin-top:18px">
+<div class="phone" style="width:265px"><div class="phone-screen"><div class="phone-hero"><div class="label">Mobile First</div><div class="name">손님이 보는 화면</div><div class="role">카톡으로 링크를 받으면 대부분 휴대폰에서 먼저 엽니다.</div></div><div class="phone-buttons"><div class="phone-btn">전화</div><div class="phone-btn">문의</div></div><div class="phone-section"><h4>한 화면에서 읽힘</h4><div class="phone-card"></div><div class="phone-card"></div></div></div></div>
+<div class="grid cols-2">
+<div class="card"><h3>글자 크기</h3><p>본문은 너무 작지 않게, 제목은 한눈에 보이게</p></div>
+<div class="card"><h3>버튼 크기</h3><p>전화/이메일 버튼은 엄지로 쉽게 누를 수 있게</p></div>
+<div class="card"><h3>한 줄 소개</h3><p>첫 화면에서 “누구인지” 바로 알 수 있게</p></div>
+<div class="card"><h3>이미지 용량</h3><p>사진이 많아도 느리지 않게 압축해서 사용</p></div>
+<div class="card"><h3>가로 스크롤 금지</h3><p>모바일에서 옆으로 밀리는 화면은 실패</p></div>
+<div class="card"><h3>고정 CTA</h3><p>연락하기 버튼이 너무 깊게 묻히지 않게</p></div>
+</div>
+</div>
+<div class="footer"><span>Mobile-first QA</span><span>9 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">GitHub Pages 주소 선택</div><h2>오늘은 User site로 갑니다</h2></div></div>
+<div class="two-url">
+<div class="url-card recommended">
+<h3><span class="badge" style="width:42px;height:42px;font-size:18px">A</span> 오늘 실습: User Pages</h3>
+<div class="url">https://아이디.github.io/</div>
+<p class="lead">저장소 이름을 <span class="kbd">아이디.github.io</span>로 만들면 경로가 없는 루트 주소가 됩니다.</p>
+</div>
+<div class="url-card">
+<h3><span class="badge" style="width:42px;height:42px;font-size:18px">B</span> 참고: Project Pages</h3>
+<div class="url">https://아이디.github.io/저장소명/</div>
+<p class="lead">레퍼런스 링크처럼 저장소별 경로가 붙는 방식입니다. 오늘은 네이버 등록까지 고려해 이 방식은 참고만 합니다.</p>
+</div>
+</div>
+<div class="card highlight" style="margin-top:28px"><p class="big-lead">예시: <span class="accent">woolfie1101.github.io</span> 저장소를 만들면 결과 주소는 <span class="accent">https://woolfie1101.github.io/</span> 입니다.</p></div>
+<div class="footer"><span>User Pages 중심 실습</span><span>10 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">중요한 SEO 정리</div><h2>User site는 네이버 등록 흐름에 맞습니다</h2></div><span class="badge">OK</span></div>
+<div class="split" style="margin-top:22px">
+<div class="card green"><h3>오늘 등록할 주소</h3><div class="url" style="margin:14px 0">https://woolfie1101.github.io/</div><p>네이버는 사이트 등록을 호스트 단위로 안내합니다. <span class="kbd">github.io</span>의 사용자 하위 도메인 루트 주소는 경로가 없기 때문에 등록 대상으로 설명하기 좋습니다.</p></div>
+<div class="card danger"><h3>주의할 주소</h3><div class="url" style="margin:14px 0">https://woolfie1101.github.io/profile-card/</div><p><span class="kbd">/profile-card/</span>처럼 경로가 붙으면 네이버가 안내하는 호스트 단위 등록 예시와 맞지 않습니다. 그래서 오늘은 User site로 통일합니다.</p></div>
+</div>
+<div class="card warn" style="margin-top:24px"><p class="big-lead">핵심: 저장소 이름은 <span class="warn">GitHub아이디.github.io</span>, 첫 화면 파일은 <span class="warn">index.html</span>, 소유확인 meta 태그는 반드시 <span class="warn">&lt;head&gt;</span> 안입니다.</p></div>
+<div class="footer"><span>네이버 등록 포인트</span><span>11 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">GitHub Pages 정책</div><h2>무료로 쓸 수 있지만<br/>제한은 있습니다</h2></div></div>
+<div class="grid cols-4" style="margin-top:22px">
+<div class="card"><h3>저장소 권장 크기</h3><p><span class="accent" style="font-size:46px;font-weight:950">1GB</span><br/>작게 유지 권장</p></div>
+<div class="card"><h3>공개 사이트 크기</h3><p><span class="accent" style="font-size:46px;font-weight:950">1GB</span><br/>Published site 기준</p></div>
+<div class="card"><h3>대역폭</h3><p><span class="accent" style="font-size:46px;font-weight:950">월 100GB</span><br/>soft limit</p></div>
+<div class="card"><h3>빌드</h3><p><span class="accent" style="font-size:46px;font-weight:950">시간당 10회</span><br/>soft limit</p></div>
+</div>
+<div class="grid cols-2" style="margin-top:22px">
+<div class="card warn"><h3>파일 크기</h3><p>일반 GitHub 저장소에서 100MiB 초과 파일은 차단됩니다. 브라우저 업로드는 더 작게 관리하는 것이 안전합니다.</p></div>
+<div class="card green"><h3>오늘 실습에는 충분</h3><p>명함 페이지, 포트폴리오, 간단한 홍보 페이지 수준은 이미지 용량만 줄이면 충분히 가볍습니다.</p></div>
+</div>
+<div class="footer"><span>공식 정책 요약</span><span>12 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">GitHub Pages 사용 경계</div><h2>명함·홍보 페이지에는 좋고<br/>거래 처리에는 맞지 않습니다</h2></div></div>
+<div class="split" style="margin-top:30px">
+<div class="card green"><h3>오늘 해도 좋은 것</h3><ul class="clean check" style="margin-top:16px"><li>명함 홈페이지</li><li>포트폴리오</li><li>브랜드 소개 페이지</li><li>전화/이메일/인스타그램 링크</li><li>카카오톡 채널 또는 네이버 예약 링크 연결</li></ul></div>
+<div class="card danger"><h3>GitHub Pages에서 직접 처리하지 말 것</h3><ul class="clean cross" style="margin-top:16px"><li>비밀번호 입력</li><li>카드번호 입력</li><li>결제 처리</li><li>개인정보 수집 폼 저장</li><li>관리자 로그인 기능</li></ul></div>
+</div>
+<div class="card highlight" style="margin-top:28px"><p class="big-lead">문의·예약·결제는 GitHub Pages 안에서 직접 만들기보다 <span class="accent">네이버 예약, 카카오 채널, 구글폼, 외부 예약 서비스</span>로 연결합니다.</p></div>
+<div class="footer"><span>정적 사이트의 한계</span><span>13 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">저장소 이름 정하기</div><h2>오늘 추천 구조는 하나입니다</h2></div></div>
+<div class="split" style="margin-top:30px">
+<div class="card green"><h3>오늘 사용할 방식</h3><div class="url" style="margin:16px 0">내GitHub아이디.github.io</div><p>예: GitHub 아이디가 <span class="kbd">woolfie1101</span>이면 저장소 이름은 <span class="kbd">woolfie1101.github.io</span> 입니다.</p></div>
+<div class="card highlight"><h3>완성 주소</h3><div class="url" style="margin:16px 0">https://내GitHub아이디.github.io/</div><p>명함 페이지가 루트 주소에서 바로 열립니다. 카카오톡, 문자, QR, 네이버/구글 등록 안내가 단순해집니다.</p></div>
+</div>
+<div class="card warn" style="margin-top:26px"><p class="big-lead">주의: 한 GitHub 계정당 User site는 기본적으로 하나입니다. 수업용 명함은 이 루트 사이트에 올리고, 나중에 사업 홈페이지로 교체하거나 확장할 수 있습니다.</p></div>
+<div class="footer"><span>Repo naming</span><span>14 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">오늘의 입력문서</div><h2>PRD 대신<br/>명함 정보 입력표를 씁니다</h2></div></div>
+<div class="grid cols-3" style="margin-top:30px">
+<div class="card"><h3>기본 정보</h3><p>이름, 직책, 한 줄 소개, 지역, 사진</p></div>
+<div class="card"><h3>전문성</h3><p>핵심 역량, 활동 분야, 대표 경력, 수상/인증</p></div>
+<div class="card"><h3>연락처</h3><p>전화, 이메일, 인스타그램, 블로그, 카카오 채널</p></div>
+<div class="card"><h3>서비스</h3><p>제공하는 서비스, 협업 가능한 일, 상담 가능한 주제</p></div>
+<div class="card"><h3>디자인 취향</h3><p>따뜻함, 고급스러움, 전문적, 감성적, 미니멀 등</p></div>
+<div class="card"><h3>SEO 문구</h3><p>검색 결과에 보일 제목과 설명문</p></div>
+</div>
+<div class="footer"><span>Profile Card Input Sheet</span><span>15 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">자동 완성 템플릿 생성기</div><h2>내용을 넣으면 Codex 요청문이 완성됩니다</h2></div></div>
+<div class="generator-layout">
+<div class="generator-panel">
+<div class="generator-head"><div><div class="section-title">왼쪽 입력표</div><p class="mini-tip">넣고 싶은 내용만 작성하세요. 빈칸은 자동으로 생략됩니다.</p></div></div>
+<div class="generator-form">
+<label class="form-field"><span>GitHub 아이디</span><input data-profile-field="githubId" placeholder="예: woolfie1101"/></label>
+<label class="form-field"><span>이름</span><input data-profile-field="name" placeholder="예: 김주희"/></label>
+<label class="form-field"><span>직책/타이틀</span><input data-profile-field="role" placeholder="예: 대표 / 강사 / 원장"/></label>
+<label class="form-field"><span>지역/활동 지역</span><input data-profile-field="location" placeholder="예: 서울·경기 / 전국"/></label>
+<label class="form-field full"><span>한 줄 소개</span><textarea data-profile-field="intro" placeholder="예: 소상공인의 온라인 홍보를 돕는 AI 활용 강사입니다." rows="2"></textarea></label>
+<label class="form-field full"><span>키워드 5개</span><input data-profile-field="keywords" placeholder="예: AI강의, 홈페이지제작, 업무자동화, 콘텐츠제작, 소상공인교육"/></label>
+<label class="form-field full"><span>핵심 역량</span><textarea data-profile-field="skills" placeholder="예: AI 도구 교육
+홈페이지 기획 및 제작
+업무 자동화 설계" rows="3"></textarea></label>
+<label class="form-field full"><span>현재 하는 일 / 활동 분야</span><textarea data-profile-field="activities" placeholder="예: 소상공인 AI 강의
+브랜드 홍보 콘텐츠 제작
+자동화 컨설팅" rows="3"></textarea></label>
+<label class="form-field full"><span>대표 경력 / 성과 / 자격</span><textarea data-profile-field="career" placeholder="예: n8n 강의 2회 진행
+수강생 총 80명
+바이브코딩 2년차" rows="3"></textarea></label>
+<label class="form-field full"><span>제공 서비스</span><textarea data-profile-field="services" placeholder="예: AI 강의
+홈페이지 제작
+SNS 콘텐츠 자동화" rows="3"></textarea></label>
+<label class="form-field"><span>전화번호</span><input data-profile-field="phone" placeholder="예: 010-0000-0000"/></label>
+<label class="form-field"><span>이메일</span><input data-profile-field="email" placeholder="예: hello@example.com"/></label>
+<label class="form-field"><span>인스타그램</span><input data-profile-field="instagram" placeholder="예: https://instagram.com/..."/></label>
+<label class="form-field"><span>블로그/홈페이지</span><input data-profile-field="website" placeholder="예: https://blog.naver.com/..."/></label>
+<label class="form-field full"><span>카카오채널/예약/상담 링크</span><input data-profile-field="booking" placeholder="예: 카카오채널, 네이버예약, 상담 신청 링크"/></label>
+<label class="form-field full"><span>원하는 분위기</span><input data-profile-field="mood" placeholder="예: 따뜻한, 고급스러운, 신뢰감 있는, 전문적인"/></label>
+<label class="form-field full"><span>SEO 제목</span><input data-profile-field="seoTitle" placeholder="예: 김OO | 소상공인 AI 강사 &amp; 홈페이지 제작"/></label>
+<label class="form-field full"><span>SEO 설명문</span><textarea data-profile-field="seoDesc" placeholder="예: 소상공인을 위한 AI 활용 교육, 홈페이지 제작, 업무 자동화 컨설팅을 제공합니다." rows="2"></textarea></label>
+<label class="form-field full"><span>추가 요청</span><textarea data-profile-field="extra" placeholder="예: 전체적으로 레퍼런스와 최대한 비슷하게, 단 내 정보 중심으로 바꿔줘." rows="2"></textarea></label>
+</div>
+<div class="generator-actions"><button class="make-btn" id="buildCardPrompt" type="button">템플릿 만들기</button><button class="ghost-btn" id="resetCardPrompt" type="button">비우기</button></div>
+</div>
+<div class="generator-panel generated-prompt">
+<button class="copy-btn">복사</button>
+<div class="section-title">오른쪽 완성형 템플릿</div>
+<p class="mini-tip">만든 뒤 복사해서 Codex에 붙여넣고, 프로필 사진도 함께 첨부하세요.</p>
+<pre><code id="generatedCardPrompt">왼쪽 입력표를 작성한 뒤 [템플릿 만들기]를 누르세요.
+
+입력하지 않은 항목은 자동으로 제외됩니다.
+프로필 사진은 Codex에 따로 첨부하면 됩니다.</code></pre>
+</div>
+</div>
+<div class="footer"><span>Interactive Prompt Builder</span><span>16 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">생성된 템플릿 사용법</div><h2>작성 → 만들기 → 복사 → Codex에 전달</h2></div></div>
+<div class="grid cols-4" style="margin-top:30px">
+<div class="card highlight"><div class="num">1</div><h3>왼쪽 입력</h3><p>명함에 넣고 싶은 내용만 적습니다. 넣기 싫은 항목은 비워도 됩니다.</p></div>
+<div class="card highlight"><div class="num">2</div><h3>템플릿 만들기</h3><p>역할, 레퍼런스, 모바일 조건, SEO 조건이 합쳐진 완성형 요청문이 만들어집니다.</p></div>
+<div class="card highlight"><div class="num">3</div><h3>복사</h3><p>오른쪽 결과물을 복사해서 Codex에 그대로 붙여넣습니다.</p></div>
+<div class="card highlight"><div class="num">4</div><h3>사진 첨부</h3><p>프로필 사진을 Codex에 함께 올립니다. 템플릿 안에는 “첨부한 사진은 프로필 사진이다”라는 지시가 들어갑니다.</p></div>
+</div>
+<div class="card green" style="margin-top:30px"><p class="big-lead">이제 수강생은 긴 프롬프트를 직접 조립할 필요 없이, 자기 정보만 채우고 복사하면 됩니다.</p></div>
+<div class="footer"><span>Prompt Builder Usage</span><span>17 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">Product Design 프롬프트 1</div><h2>레퍼런스 페이지 분석시키기</h2></div></div>
+<div class="codebox" style="margin-top:8px"><button class="copy-btn">복사</button><pre><code>아래 레퍼런스 명함 홈페이지를 Product Design 관점에서 분석해줘.
+
+레퍼런스 URL:
+https://jbpak3123-pixel.github.io/park-jangbae-card/
+
+분석해줄 것:
+1. 전체 페이지 구조
+2. 첫 화면 Hero 구성
+3. 모바일 화면에서의 섹션 순서
+4. 버튼/CTA 구성
+5. 카드, 아코디언, 갤러리 같은 UI 요소
+6. 색감, 여백, 폰트 분위기
+7. 내 명함 홈페이지에 적용하면 좋은 요소
+
+주의:
+- 레퍼런스의 개인정보, 사진, 문구를 그대로 복사하지 말고 구조와 스타일만 참고해줘.
+- 최종 구현은 GitHub Pages에서 바로 실행되는 HTML/CSS/JS 정적 사이트로 만들 계획이야.</code></pre></div>
+<div class="footer"><span>Reference Analysis</span><span>18 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">Product Design 프롬프트 2</div><h2>분석 결과 + 16쪽 템플릿으로 구현시키기</h2></div></div>
+<div class="codebox" style="margin-top:8px"><button class="copy-btn">복사</button><pre><code>방금 Product Design으로 분석한 레퍼런스 명함 홈페이지의 구조와 분위기를 참고해서,
+16쪽에서 생성한 완성형 템플릿의 내용을 실제 모바일 명함 홈페이지로 구현해줘.
+
+진행 방식:
+1. 레퍼런스의 섹션 순서, 여백, 카드 구성, 버튼 느낌을 최대한 참고해줘.
+2. 개인정보, 사진, 문구는 반드시 내가 제공한 정보와 첨부 사진으로 교체해줘.
+3. 첨부한 사진은 프로필 사진이다. Hero 영역과 프로필 영역에 자연스럽게 사용해줘.
+4. GitHub Pages User site에서 바로 실행되는 정적 사이트로 만들어줘.
+5. 파일은 index.html, style.css, script.js 중심으로 구성해줘.
+6. 모바일에서 먼저 보기 좋게 만들고, PC에서는 넓게 확장되도록 해줘.
+7. SEO 기본 태그와 네이버/구글 소유확인 meta 태그를 넣을 주석 위치를 &lt;head&gt; 안에 만들어줘.
+
+[16쪽에서 생성한 완성형 템플릿]
+여기에 복사한 내용을 붙여넣기</code></pre></div>
+<div class="footer"><span>Build Prompt</span><span>19 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">추천 파일 구조</div><h2>복잡하게 만들지 않습니다</h2></div></div>
+<div class="split wide-left" style="margin-top:28px">
+<div class="codebox"><pre><code>profile-card/
+├─ index.html
+├─ style.css
+├─ script.js
+├─ contact.vcf          # 선택
+└─ assets/
+   ├─ profile.jpg
+   ├─ og-image.jpg
+   └─ gallery-01.jpg</code></pre></div>
+<div class="grid">
+<div class="card green"><h3>index.html</h3><p>페이지 내용과 SEO meta 태그가 들어가는 핵심 파일</p></div>
+<div class="card"><h3>style.css</h3><p>디자인, 반응형, 모바일 화면 설정</p></div>
+<div class="card"><h3>script.js</h3><p>햄버거 메뉴, 아코디언, 버튼 동작</p></div>
+<div class="card warn"><h3>assets</h3><p>이미지는 용량을 줄여 넣기. 큰 원본 사진을 그대로 올리지 않기</p></div>
+</div>
+</div>
+<div class="footer"><span>Static Site Structure</span><span>20 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">모바일 QA 프롬프트</div><h2>만든 뒤 바로 검사시키기</h2></div></div>
+<div class="codebox" style="margin-top:8px"><button class="copy-btn">복사</button><pre><code>방금 만든 명함 홈페이지를 모바일 기준으로 점검하고 수정해줘.
+
+모바일 QA 기준:
+1. 360px 폭의 작은 휴대폰에서도 가로 스크롤이 없어야 함
+2. 첫 화면에서 이름, 직책, 한 줄 소개가 바로 보여야 함
+3. 전화/이메일/문의 버튼은 손가락으로 누르기 쉬운 크기여야 함
+4. 메뉴가 있다면 모바일에서 열고 닫혀야 함
+5. 이미지가 화면을 밀어내거나 깨지면 안 됨
+6. 본문 글자는 너무 작지 않아야 함
+7. 핵심 연락 버튼은 페이지 하단에서도 찾기 쉬워야 함
+8. Lighthouse 기준으로 접근성/SEO에 문제가 될 만한 부분을 줄여줘
+
+필요하면 CSS 미디어쿼리를 추가해서 수정해줘.</code></pre></div>
+<div class="footer"><span>Mobile QA Prompt</span><span>21 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">화면 구성 체크</div><h2>명함 홈페이지에 들어가면 좋은 섹션</h2></div></div>
+<div class="qa-list">
+<div class="qa-item">상단: 이름, 직책, 한 줄 소개</div>
+<div class="qa-item">CTA: 전화, 이메일, 연락처 저장, 상담 링크</div>
+<div class="qa-item">핵심 키워드: 내가 어떤 사람인지 5초 안에 이해</div>
+<div class="qa-item">전문 분야: 카드 또는 아코디언으로 정리</div>
+<div class="qa-item">대표 경력/성과: 너무 길지 않게 요약</div>
+<div class="qa-item">사진/포트폴리오: 실제 신뢰를 주는 이미지</div>
+<div class="qa-item">SNS/외부 링크: 인스타, 블로그, 카카오채널</div>
+<div class="qa-item">하단 문의 영역: 마지막에 다시 연락 유도</div>
+</div>
+<div class="footer"><span>Card Page Sections</span><span>22 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">GitHub Pages 배포</div><h2>코드가 완성되면<br/>인터넷에 공개합니다</h2></div></div>
+<div class="flow"><div class="step">Repository</div><div class="arrow">→</div><div class="step">Settings</div><div class="arrow">→</div><div class="step">Pages</div><div class="arrow">→</div><div class="step">Deploy from branch</div><div class="arrow">→</div><div class="step">URL 확인</div></div>
+<div class="grid cols-2" style="margin-top:34px">
+<div class="card"><h3>Branch</h3><p><span class="kbd">main</span> 선택</p></div>
+<div class="card"><h3>Folder</h3><p><span class="kbd">/root</span> 선택</p></div>
+<div class="card"><h3>기다리기</h3><p>처음 배포는 몇 분 걸릴 수 있음</p></div>
+<div class="card"><h3>확인</h3><p>배포 URL을 열고 휴대폰에서도 확인</p></div>
+</div>
+<div class="footer"><span>Publish Flow</span><span>23 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">배포가 안 될 때</div><h2>Codex에게 이렇게 물어봅니다</h2></div></div>
+<div class="codebox" style="margin-top:8px"><button class="copy-btn">복사</button><pre><code>GitHub Pages로 배포했는데 페이지가 제대로 열리지 않아.
+아래 상황을 기준으로 원인을 찾아서 수정해줘.
+
+확인할 것:
+1. index.html 파일이 저장소 루트에 있는지
+2. 파일명이 Index.html 또는 index.htm처럼 잘못되어 있지 않은지
+3. CSS/JS 경로가 GitHub Pages 경로에서 깨지지 않는지
+4. 이미지 경로가 대소문자까지 정확한지
+5. 상대경로를 사용하고 있는지
+6. GitHub Pages 설정이 main / root 로 되어 있는지
+7. 배포 후 반영 시간이 필요한 상태인지
+
+필요하면 경로를 모두 GitHub Pages에서 안전한 상대경로로 고쳐줘.</code></pre></div>
+<div class="footer"><span>Deploy Debug Prompt</span><span>24 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">SEO 이해하기</div><h2>SEO는 검색엔진에게 붙이는<br/>홈페이지 이름표입니다</h2></div><span class="badge">SEO</span></div>
+<div class="split wide-left" style="margin-top:28px">
+<div class="card highlight">
+<h3>Search Engine Optimization</h3>
+<p class="big-lead" style="margin-top:16px">검색엔진이 내 페이지의 내용을 <span class="accent">잘 읽고, 잘 이해하고, 검색 결과에 보여줄 수 있게</span> 정리하는 작업입니다.</p>
+</div>
+<div class="card warn">
+<h3>오해하면 안 되는 것</h3>
+<ul class="clean cross" style="margin-top:16px">
+<li>검색 광고가 아닙니다</li>
+<li>1등 노출 보장 기술이 아닙니다</li>
+<li>키워드를 많이 넣는 작업이 아닙니다</li>
+</ul>
+</div>
+</div>
+<div class="card green" style="margin-top:26px"><p class="big-lead">오늘 수업에서는 복잡한 SEO가 아니라, <span class="accent3">명함 홈페이지가 검색엔진과 공유 화면에서 제대로 읽히게 만드는 기본 설정</span>까지만 합니다.</p></div>
+<div class="footer"><span>What is SEO?</span><span>25 / 40</span></div>
+</section><section class="slide">
+<div class="slide-header"><div><div class="eyebrow">검색엔진의 흐름</div><h2>검색엔진은 보통<br/>수집 → 색인 → 노출 순서로 움직입니다</h2></div></div>
+<div class="seo-flow">
+<div class="card highlight"><div class="num">1</div><h3>수집</h3><p>검색 로봇이 내 사이트 주소에 방문해서 HTML 내용을 읽습니다.</p></div>
+<div class="seo-arrow">→</div>
+<div class="card green"><div class="num">2</div><h3>색인</h3><p>읽은 내용을 검색엔진 데이터베이스에 정리합니다.</p></div>
+<div class="seo-arrow">→</div>
+<div class="card warn"><div class="num">3</div><h3>노출</h3><p>사용자가 관련 검색어를 입력했을 때 결과에 보여줄지 판단합니다.</p></div>
+</div>
+<div class="footnote">그래서 SEO 태그는 “검색 로봇이 읽는 설명서”에 가깝습니다.</div>
+<div class="footer"><span>Crawl · Index · Show</span><span>26 / 40</span></div>
+</section><section class="slide">
+<div class="slide-header"><div><div class="eyebrow">검색 결과 화면</div><h2>검색 결과에는 보통<br/>제목, 주소, 설명문이 보입니다</h2></div></div>
+<div class="serp-preview">
+<div class="serp-small">검색 결과 예시</div>
+<div class="serp-title">김OO | 소상공인 AI 강사 &amp; 홈페이지 제작</div>
+<div class="serp-url">https://woolfie1101.github.io/</div>
+<div class="serp-desc">소상공인을 위한 AI 활용 교육, 홈페이지 제작, 업무 자동화 컨설팅을 제공합니다. 강의 문의와 포트폴리오를 한눈에 확인하세요.</div>
+</div>
+<div class="grid cols-3" style="margin-top:24px">
+<div class="card"><h3>제목</h3><p>내가 누구인지 가장 짧게 보여주는 문장</p></div>
+<div class="card"><h3>주소</h3><p>수강생이 만든 GitHub Pages 주소</p></div>
+<div class="card"><h3>설명문</h3><p>방문자가 클릭할지 판단하는 소개글</p></div>
+</div>
+<div class="footer"><span>Search Result Preview</span><span>27 / 40</span></div>
+</section><section class="slide">
+<div class="slide-header"><div><div class="eyebrow">오늘 할 SEO 범위</div><h2>명함 홈페이지에서는<br/>이 정도만 해도 충분합니다</h2></div></div>
+<div class="grid cols-3" style="margin-top:26px">
+<div class="card highlight"><h3>검색용 태그</h3><p class="seo-term"><strong>title</strong><br/><strong>description</strong><br/><strong>canonical</strong><br/><strong>robots</strong></p></div>
+<div class="card green"><h3>공유용 태그</h3><p class="seo-term"><strong>og:title</strong><br/><strong>og:description</strong><br/><strong>og:image</strong><br/><strong>og:url</strong></p></div>
+<div class="card warn"><h3>소유확인 태그</h3><p class="seo-term"><strong>naver-site-verification</strong><br/><strong>google-site-verification</strong><br/><br/>반드시 &lt;head&gt; 안에 넣기</p></div>
+</div>
+<div class="card danger" style="margin-top:24px"><p class="big-lead">하지 말 것: 똑같은 키워드 반복, 숨겨진 글자, 관계없는 인기 검색어 넣기. 이런 방식은 검색엔진과 방문자 모두에게 좋지 않습니다.</p></div>
+<div class="footer"><span>SEO Scope Today</span><span>28 / 40</span></div>
+</section><section class="slide">
+<div class="slide-header"><div><div class="eyebrow">SEO 기본</div><h2>검색엔진이 이해할 수 있게<br/>페이지의 이름표를 붙입니다</h2></div></div>
+<div class="grid cols-3" style="margin-top:30px">
+<div class="card"><h3>title</h3><p>검색 결과와 브라우저 탭에 보이는 페이지 제목</p></div>
+<div class="card"><h3>description</h3><p>검색 결과에 표시될 수 있는 페이지 설명</p></div>
+<div class="card"><h3>Open Graph</h3><p>카카오톡, SNS 공유 미리보기에 쓰이는 제목/설명/이미지</p></div>
+<div class="card"><h3>canonical</h3><p>이 페이지의 대표 URL을 검색엔진에 알려줌</p></div>
+<div class="card"><h3>viewport</h3><p>모바일 화면에서 정상적으로 보이기 위한 기본 태그</p></div>
+<div class="card"><h3>verification</h3><p>네이버/구글 소유확인용 meta 태그</p></div>
+</div>
+<div class="card warn" style="margin-top:28px"><p class="big-lead">SEO 설정은 검색 상위 노출을 보장하는 마법이 아니라, <span class="warn">검색엔진이 페이지를 이해할 수 있게 정리하는 기본 작업</span>입니다.</p></div>
+<div class="footer"><span>SEO Basics</span><span>29 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">SEO 태그 예시</div><h2>&lt;head&gt; 안에 들어갑니다</h2></div></div>
+<div class="codebox" style="margin-top:8px"><button class="copy-btn">복사</button><pre><code>&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+
+  &lt;title&gt;김OO | 소상공인 AI 강사 &amp; 홈페이지 제작&lt;/title&gt;
+  &lt;meta name="description" content="소상공인을 위한 AI 활용 교육, 홈페이지 제작, 업무 자동화 컨설팅을 제공합니다." /&gt;
+
+  &lt;link rel="canonical" href="https://아이디.github.io/" /&gt;
+  &lt;meta name="robots" content="index, follow" /&gt;
+
+  &lt;meta property="og:type" content="website" /&gt;
+  &lt;meta property="og:title" content="김OO | 소상공인 AI 강사" /&gt;
+  &lt;meta property="og:description" content="AI 교육, 홈페이지 제작, 업무 자동화 컨설팅" /&gt;
+  &lt;meta property="og:image" content="https://아이디.github.io/assets/og-image.jpg" /&gt;
+  &lt;meta property="og:url" content="https://아이디.github.io/" /&gt;
+
+  &lt;!-- 네이버/구글 소유확인 meta 태그는 여기에 추가 --&gt;
+&lt;/head&gt;</code></pre></div>
+<div class="footer"><span>Head Meta Tags</span><span>30 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">SEO 적용 프롬프트</div><h2>Codex에게 태그를 정리시키기</h2></div></div>
+<div class="codebox" style="margin-top:8px"><button class="copy-btn">복사</button><pre><code>현재 명함 홈페이지의 SEO 태그를 점검하고 보완해줘.
+
+추가/수정할 것:
+1. title 태그
+2. meta description
+3. canonical URL
+4. robots index, follow
+5. Open Graph 태그: og:type, og:title, og:description, og:image, og:url
+6. 모바일 viewport 태그
+7. lang="ko" 설정
+8. 이미지 alt 텍스트
+9. 네이버/구글 소유확인 meta 태그를 넣을 주석 위치
+
+내 배포 주소:
+여기에 GitHub Pages 주소 붙여넣기
+
+내 SEO 제목:
+여기에 제목 붙여넣기
+
+내 SEO 설명문:
+여기에 설명문 붙여넣기</code></pre></div>
+<div class="footer"><span>SEO Prompt</span><span>31 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">네이버 서치어드바이저</div><h2>네이버에 내 User site를 알려주기</h2></div></div>
+<div class="split wide-left" style="margin-top:22px">
+<div class="card highlight"><h3>진행 순서</h3><ul class="clean check" style="margin-top:16px"><li>https://searchadvisor.naver.com/ 접속</li><li>웹마스터 도구로 이동</li><li>사이트 주소에 <span class="kbd">https://아이디.github.io/</span> 입력</li><li>HTML 태그 방식 선택</li><li>발급받은 meta 태그 복사</li><li>Codex에게 index.html의 &lt;head&gt; 안에 넣으라고 요청</li><li>GitHub Pages 배포 반영 후 네이버에서 소유확인</li></ul></div>
+<div class="card warn"><h3>오늘 주소 기준</h3><p><span class="kbd">https://woolfie1101.github.io/</span>처럼 경로가 없는 User site는 네이버의 호스트 단위 등록 설명과 맞습니다.</p><p style="margin-top:18px">소유확인 meta 태그는 반드시 <span class="kbd">&lt;head&gt;</span> 안에 있어야 합니다. <span class="kbd">body</span> 안이면 검증에서 제외될 수 있습니다.</p></div>
+</div>
+<div class="footer"><span>Naver Search Advisor</span><span>32 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">네이버 소유확인 프롬프트</div><h2>받은 태그를 그대로 넣기</h2></div></div>
+<div class="codebox" style="margin-top:8px"><button class="copy-btn">복사</button><pre><code>네이버 서치어드바이저에서 받은 소유확인 meta 태그를 index.html의 &lt;head&gt; 안에 추가해줘.
+
+중요:
+- 절대 body 안에 넣지 말고 head 안에 넣어줘.
+- 기존 title, description, og 태그는 유지해줘.
+- 태그 내용은 내가 붙여넣은 그대로 사용해줘.
+- 수정 후 GitHub Pages에서 배포된 실제 페이지의 소스에도 이 태그가 보여야 해.
+
+[네이버 소유확인 meta 태그]
+여기에 네이버에서 복사한 태그 붙여넣기
+예시:
+&lt;meta name="naver-site-verification" content="발급받은값" /&gt;</code></pre></div>
+<div class="footer"><span>Naver Verification Prompt</span><span>33 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">Google Search Console</div><h2>구글에도 내 사이트를 등록합니다</h2></div></div>
+<div class="split wide-left" style="margin-top:22px">
+<div class="card highlight"><h3>진행 순서</h3><ul class="clean check" style="margin-top:16px"><li>https://search.google.com/search-console 접속</li><li>속성 추가</li><li>URL 접두어 선택</li><li>GitHub Pages 주소 입력</li><li>HTML 태그 방식 선택</li><li>발급받은 google-site-verification 태그 복사</li><li>Codex에게 &lt;head&gt; 안에 넣게 하기</li><li>다시 Search Console에서 확인 클릭</li></ul></div>
+<div class="card green"><h3>구글은 URL-prefix가 유용</h3><p>프로젝트 페이지처럼 <span class="kbd">/저장소명/</span> 경로가 있는 주소도 URL-prefix 속성으로 진행하기 좋습니다.</p><p style="margin-top:18px">단, 확인 태그는 해당 주소에서 열리는 홈 페이지의 <span class="kbd">head</span> 안에 있어야 합니다.</p></div>
+</div>
+<div class="footer"><span>Google Search Console</span><span>34 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">구글 소유확인 프롬프트</div><h2>구글 태그도 같은 방식</h2></div></div>
+<div class="codebox" style="margin-top:8px"><button class="copy-btn">복사</button><pre><code>Google Search Console에서 받은 소유확인 meta 태그를 index.html의 &lt;head&gt; 안에 추가해줘.
+
+중요:
+- 네이버 태그가 이미 있다면 삭제하지 말고 함께 유지해줘.
+- Google 태그도 반드시 head 안에 넣어줘.
+- 내가 붙여넣은 태그 값을 임의로 수정하지 마.
+- 수정 후 GitHub Pages에 반영되도록 저장해줘.
+
+[Google 소유확인 meta 태그]
+여기에 구글에서 복사한 태그 붙여넣기
+예시:
+&lt;meta name="google-site-verification" content="발급받은값" /&gt;</code></pre></div>
+<div class="footer"><span>Google Verification Prompt</span><span>35 / 40</span></div>
+</section>
+<section class="slide verification-slide">
+<div class="slide-header"><div><div class="eyebrow">소유확인 실패 시</div><h2>대부분은 위치·주소·배포 문제입니다</h2></div></div>
+<div class="grid cols-2" style="margin-top:26px">
+<div class="card"><h3>1. 아직 배포 반영 전</h3><p>GitHub Pages는 저장 후 실제 페이지 반영까지 시간이 조금 걸릴 수 있습니다.</p></div>
+<div class="card"><h3>2. 태그 위치 오류</h3><p>meta 태그가 body 안에 있거나 다른 HTML 파일에 있으면 실패합니다.</p></div>
+<div class="card"><h3>3. 주소 불일치</h3><p>Search Console/Advisor에 넣은 URL과 실제 배포 URL이 다르면 실패합니다.</p></div>
+<div class="card"><h3>4. 저장소 이름 오류</h3><p>User site는 저장소 이름이 정확히 <span class="kbd">아이디.github.io</span>여야 합니다.</p></div>
+</div>
+<div class="codebox debug-codebox" style="margin-top:20px"><button class="copy-btn">복사</button><pre><code>소유확인이 실패했어. 아래 정보를 기준으로 원인을 찾아줘.
+
+1. 내 GitHub 아이디:
+2. 저장소 이름:
+3. 내 배포 URL:
+4. 네이버/구글에 입력한 URL:
+5. index.html의 head 안에 넣은 meta 태그:
+6. GitHub Pages 설정:
+
+확인할 것:
+- 저장소 이름이 아이디.github.io 형식인지
+- meta 태그가 실제 배포된 페이지의 head 안에 있는지
+- URL이 https://아이디.github.io/ 형태로 정확히 같은지
+- GitHub Pages 배포가 아직 반영 전인지</code></pre></div>
+<div class="footer"><span>Verification Debug</span><span>36 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">최종 점검표</div><h2>제출 전 확인</h2></div></div>
+<div class="qa-list">
+<div class="qa-item">PC에서 페이지가 열린다</div>
+<div class="qa-item">휴대폰에서 가로 스크롤이 없다</div>
+<div class="qa-item">전화 버튼이 tel: 링크로 동작한다</div>
+<div class="qa-item">이메일 버튼이 mailto: 링크로 동작한다</div>
+<div class="qa-item">이미지 alt 텍스트가 있다</div>
+<div class="qa-item">title/description이 내 정보로 들어갔다</div>
+<div class="qa-item">og:title/og:description/og:image가 있다</div>
+<div class="qa-item">canonical URL이 실제 배포 주소와 맞다</div>
+<div class="qa-item">네이버 태그가 head 안에 있다</div>
+<div class="qa-item">구글 태그가 head 안에 있다</div>
+</div>
+<div class="footer"><span>Final QA</span><span>37 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">수강생 제출 형식</div><h2>완성 후 이 4가지를 공유</h2></div></div>
+<div class="codebox" style="margin-top:12px"><button class="copy-btn">복사</button><pre><code>[오늘 완성 결과 제출]
+
+1. 이름:
+2. GitHub Pages 명함 URL:
+   예) https://아이디.github.io/
+3. 모바일 확인 여부:
+   - 예 / 아니오
+4. SEO 등록 진행 여부:
+   - 네이버: 완료 / 진행 중 / 확인 실패
+   - 구글: 완료 / 진행 중 / 확인 실패
+5. 수정하고 싶은 점:
+   - 예) 사진 더 넣고 싶음, 색상 바꾸고 싶음, 경력 정리하고 싶음</code></pre></div>
+<div class="card highlight" style="margin-top:26px"><p class="big-lead">수업 시간에는 완벽한 디자인보다 <span class="accent">“실제로 인터넷에 올라갔다”</span>가 더 중요합니다. 완성 후 고도화하면 됩니다.</p></div>
+<div class="footer"><span>Result Submission</span><span>38 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">다음 단계</div><h2>이제 실제 사업 홈페이지로 확장</h2></div></div>
+<div class="flow"><div class="step">오늘 명함</div><div class="arrow">→</div><div class="step">작성해둔 PRD</div><div class="arrow">→</div><div class="step">Product Design</div><div class="arrow">→</div><div class="step">사업 홈페이지</div></div>
+<div class="grid cols-2" style="margin-top:34px">
+<div class="card"><h3>오늘 배운 것</h3><p>AI에게 구조를 만들게 하고, GitHub Pages로 배포하고, 검색 등록 태그까지 넣는 흐름</p></div>
+<div class="card green"><h3>다음에 할 것</h3><p>이미 작성한 사업 PRD를 넣고, 레퍼런스 홈페이지의 디자인을 참고해 실제 고객용 홈페이지 제작</p></div>
+</div>
+<div class="card warn" style="margin-top:28px"><p class="big-lead">사업 홈페이지에서 예약, 문의, 챗봇, 자동화가 필요하면 GitHub Pages 단독이 아니라 외부 서비스나 백엔드 연동으로 넘어갑니다.</p></div>
+<div class="footer"><span>Business Website Preview</span><span>39 / 40</span></div>
+</section>
+<section class="slide">
+<div class="slide-header"><div><div class="eyebrow">오늘의 결론</div><h2>홈페이지 제작은<br/>이제 “코딩”보다 “지시”에 가깝습니다</h2></div></div>
+<div class="grid cols-3" style="margin-top:34px">
+<div class="card highlight"><div class="num">1</div><h3>참고할 디자인을 보여준다</h3><p>Product Design이 구조와 분위기를 분석한다.</p></div>
+<div class="card highlight"><div class="num">2</div><h3>내 정보를 정확히 준다</h3><p>명함 입력표가 좋아야 결과물이 좋아진다.</p></div>
+<div class="card highlight"><div class="num">3</div><h3>검사 기준을 준다</h3><p>모바일, 배포, SEO까지 체크시키면 실전 결과물이 된다.</p></div>
+</div>
+<div class="stamp">Q&amp;A</div>
+<div class="footer"><span>Wrap-up</span><span>40 / 40</span></div>
+</section>
+<div aria-hidden="true" class="controls"><button id="prev" title="이전">‹</button><button id="next" title="다음">›</button></div>
+<div class="progress"><span id="progress"></span></div>
+</main>
+</div>
+<script>
+  const DESIGN_WIDTH = 1600;
+  const DESIGN_HEIGHT = 900;
+  const SAFE_MARGIN = 32;
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const progress = document.getElementById('progress');
+  let current = 0;
+
+  function fitStage(){
+    const margin = Math.min(SAFE_MARGIN, Math.max(10, window.innerWidth * 0.025));
+    const availableWidth = Math.max(1, window.innerWidth - margin * 2);
+    const availableHeight = Math.max(1, window.innerHeight - margin * 2);
+    const scale = Math.min(availableWidth / DESIGN_WIDTH, availableHeight / DESIGN_HEIGHT);
+    document.documentElement.style.setProperty('--deck-scale', String(Math.max(0.12, scale)));
+  }
+
+  fitStage();
+  window.addEventListener('resize', fitStage);
+  window.addEventListener('orientationchange', fitStage);
+  document.addEventListener('fullscreenchange', fitStage);
+  function show(i){
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === current));
+    progress.style.width = ((current + 1) / slides.length * 100) + '%';
+    const footer = slides[current].querySelector('.footer span:last-child');
+    if(footer) footer.textContent = `${current + 1} / ${slides.length}`;
+  }
+  document.getElementById('next').addEventListener('click', () => show(current + 1));
+  document.getElementById('prev').addEventListener('click', () => show(current - 1));
+  window.addEventListener('keydown', (e) => {
+    const tag = (e.target?.tagName || '').toLowerCase();
+    const isTyping = tag === 'input' || tag === 'textarea' || tag === 'select' || e.target?.isContentEditable;
+    if(isTyping) return;
+    if(['ArrowRight','PageDown',' '].includes(e.key)){ e.preventDefault(); show(current + 1); }
+    if(['ArrowLeft','PageUp'].includes(e.key)){ e.preventDefault(); show(current - 1); }
+    if(e.key === 'Home') show(0);
+    if(e.key === 'End') show(slides.length - 1);
+    if(e.key.toLowerCase() === 'f') {
+      const el = document.documentElement;
+      if(!document.fullscreenElement) el.requestFullscreen?.(); else document.exitFullscreen?.();
+    }
+  });
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.parentElement.querySelector('code')?.innerText || '';
+      try{
+        await navigator.clipboard.writeText(code);
+        btn.textContent = '복사됨';
+        btn.classList.add('copied');
+        setTimeout(() => {btn.textContent = '복사'; btn.classList.remove('copied');}, 1300);
+      }catch(err){
+        const ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+        btn.textContent = '복사됨';
+        setTimeout(() => {btn.textContent = '복사';}, 1300);
+      }
+    });
+  });
+
+  function getProfileValue(key){
+    return document.querySelector(`[data-profile-field="${key}"]`)?.value.trim() || '';
+  }
+  function appendLine(lines, label, key){
+    const v = getProfileValue(key);
+    if(!v) return;
+    if(v.includes('\n')) lines.push(`${label}:\n${v}`);
+    else lines.push(`${label}: ${v}`);
+  }
+  function buildCardPrompt(){
+    const githubId = getProfileValue('githubId');
+    const repoName = githubId ? `${githubId}.github.io` : '내GitHub아이디.github.io';
+    const deployUrl = githubId ? `https://${githubId}.github.io/` : 'https://내GitHub아이디.github.io/';
+    const lines = [];
+    appendLine(lines, 'GitHub 아이디', 'githubId');
+    appendLine(lines, '이름', 'name');
+    appendLine(lines, '직책/타이틀', 'role');
+    appendLine(lines, '지역/활동 지역', 'location');
+    appendLine(lines, '한 줄 소개', 'intro');
+    appendLine(lines, '키워드', 'keywords');
+    appendLine(lines, '핵심 역량', 'skills');
+    appendLine(lines, '현재 하는 일 / 활동 분야', 'activities');
+    appendLine(lines, '대표 경력 / 성과 / 자격', 'career');
+    appendLine(lines, '제공 서비스', 'services');
+    appendLine(lines, '전화번호', 'phone');
+    appendLine(lines, '이메일', 'email');
+    appendLine(lines, '인스타그램', 'instagram');
+    appendLine(lines, '블로그/홈페이지', 'website');
+    appendLine(lines, '카카오채널/예약/상담 링크', 'booking');
+    appendLine(lines, '원하는 분위기', 'mood');
+    appendLine(lines, 'SEO 제목', 'seoTitle');
+    appendLine(lines, 'SEO 설명문', 'seoDesc');
+    appendLine(lines, '추가 요청', 'extra');
+
+    const infoBlock = lines.length ? lines.join('\n\n') : '입력한 항목이 아직 없습니다. 비어 있는 항목은 섹션에서 제외하고, 명함 페이지에 꼭 필요한 기본 구조만 먼저 만들어줘.';
+
+    const prompt = `너는 모바일 명함 홈페이지를 만드는 웹 디자이너이자 프론트엔드 개발자야.
+
+아래 레퍼런스 명함 홈페이지를 Codex의 Product Design 관점으로 분석한 뒤, 구조와 분위기를 최대한 참고해서 내 디지털 프로필 페이지를 만들어줘.
+
+레퍼런스 URL:
+https://jbpak3123-pixel.github.io/park-jangbae-card/
+
+중요 원칙:
+- 레퍼런스의 전체 구성, 섹션 순서, 여백, 카드 디자인, 버튼 느낌, 모바일 배치를 참고해줘.
+- 레퍼런스의 개인정보, 사진, 문구는 그대로 복사하지 말고 모두 내 정보로 교체해줘.
+- 내가 비워둔 항목은 억지로 만들지 말고 자연스럽게 생략해줘.
+- 완성 결과는 모바일에서 먼저 보기 좋은 명함 홈페이지여야 해.
+
+프로필 사진 지시:
+- 첨부한 사진은 프로필 사진이다.
+- 이 사진을 Hero 영역과 프로필 소개 영역에 자연스럽게 사용해줘.
+- 사진 파일명은 Codex에 첨부한 실제 파일명을 기준으로 연결해줘.
+- 이미지에는 의미 있는 alt 텍스트를 넣어줘.
+
+배포 방식:
+- GitHub Pages User site로 배포할 예정이다.
+- 저장소 이름은 ${repoName} 이다.
+- 배포 주소는 ${deployUrl} 이다.
+- canonical URL도 ${deployUrl} 로 맞춰줘.
+
+구현 조건:
+- React, Next.js, Vite 같은 빌드 도구 없이 정적 사이트로 만들어줘.
+- 파일은 index.html, style.css, script.js 중심으로 구성해줘.
+- 필요하면 assets 폴더를 사용해도 돼.
+- GitHub Pages에서 바로 열리도록 상대 경로를 사용해줘.
+- 모바일 우선 반응형으로 만들어줘.
+- PC 화면에서는 너무 넓게 퍼지지 않도록 최대 너비를 잡아줘.
+- 전화번호가 있으면 tel: 버튼을 만들어줘.
+- 이메일이 있으면 mailto: 버튼을 만들어줘.
+- 링크가 있으면 새 창으로 열리게 해줘.
+- 가능하면 연락처 저장용 contact.vcf 파일도 만들어줘.
+- 핵심 역량, 활동 분야, 경력은 카드 또는 아코디언 형태로 보기 좋게 정리해줘.
+- 하단에는 다시 연락을 유도하는 CTA 영역을 넣어줘.
+
+SEO 조건:
+- HTML의 lang은 ko로 설정해줘.
+- title, meta description을 내 정보에 맞게 넣어줘.
+- og:title, og:description, og:type, og:url, og:image를 넣어줘.
+- viewport meta 태그를 넣어줘.
+- robots는 index, follow로 설정해줘.
+- 네이버 서치어드바이저 소유확인 meta 태그와 Google Search Console 소유확인 meta 태그를 나중에 쉽게 넣을 수 있도록 <head> 안에 주석 위치를 만들어줘.
+
+내 명함 정보:
+${infoBlock}
+
+마지막으로 다음 기준으로 스스로 점검해줘:
+1. 모바일에서 가로 스크롤이 없는지
+2. 버튼을 엄지손가락으로 누르기 쉬운지
+3. GitHub Pages User site에서 index.html이 바로 열리는지
+4. SEO 태그가 <head> 안에 있는지
+5. 첨부한 프로필 사진이 깨지지 않고 표시되는지`;
+
+    const output = document.getElementById('generatedCardPrompt');
+    if(output) output.textContent = prompt;
+  }
+  document.getElementById('buildCardPrompt')?.addEventListener('click', buildCardPrompt);
+  document.getElementById('resetCardPrompt')?.addEventListener('click', () => {
+    document.querySelectorAll('[data-profile-field]').forEach(el => el.value = '');
+    const output = document.getElementById('generatedCardPrompt');
+    if(output) output.textContent = '왼쪽 입력표를 작성한 뒤 [템플릿 만들기]를 누르세요.\n\n입력하지 않은 항목은 자동으로 제외됩니다.\n프로필 사진은 Codex에 따로 첨부하면 됩니다.';
+  });
+
+  let touchStartX = null;
+  window.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive:true});
+  window.addEventListener('touchend', e => {
+    if(touchStartX === null) return;
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    if(Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+    touchStartX = null;
+  }, {passive:true});
+  show(0);
+</script>
+</body>
+</html>

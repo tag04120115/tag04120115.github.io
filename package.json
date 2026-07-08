@@ -4,7 +4,7 @@
   "description": "Premium glassmorphic digital business card with live-editor dashboard.",
   "main": "index.html",
   "scripts": {
-    "dev": "npx -y http-server -p 3000",
+    "dev": "npx -y http-server -a localhost -p 3000 -o",
     "db-setup": "node create_table.js"
   },
   "dependencies": {
